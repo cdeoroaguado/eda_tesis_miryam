@@ -1,0 +1,7 @@
+fig:nice-fig
+tab:nice-tab
+intro
+literature
+requerimiento
+contexto-de-los-datos
+operacionalizacion
