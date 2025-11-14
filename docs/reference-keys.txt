@@ -5,3 +5,13 @@ literature
 requerimiento
 contexto-de-los-datos
 operacionalizacion
+contexto-del-problema
+variables-sociodemográficas
+sensibilidad-intercultural-cuant
+competencia-simbólica-cual
+influencia-de-la-telecolaboración-mixta
+tab:oper2
+tab:oper3
+tab:oper4
+operacionalizacion-vars
+eda
