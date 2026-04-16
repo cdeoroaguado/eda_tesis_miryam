@@ -23,15 +23,15 @@
 <meta name="author" content="Carlos de Oro Aguado" />
 
 
-<meta name="date" content="2025-11-14" />
+<meta name="date" content="2026-04-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="operacionalizacion-vars.html"/>
-<link rel="next" href="referencias.html"/>
+<link rel="prev" href="operacionalizacion.html"/>
+<link rel="next" href="validacion.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -52,6 +52,10 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
 
 
 
@@ -77,12 +81,21 @@
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Contexto del problema</a></li>
-<li class="chapter" data-level="2" data-path="operacionalizacion-vars.html"><a href="operacionalizacion-vars.html"><i class="fa fa-check"></i><b>2</b> Operacionalización de las variables</a>
+<li class="chapter" data-level="2" data-path="operacionalizacion.html"><a href="operacionalizacion.html"><i class="fa fa-check"></i><b>2</b> Operacionalización de las variables</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="02-EDA.html"><a href="#variables-sociodemogr%C3%A1ficas"><i class="fa fa-check"></i><b>2.1</b> Variables sociodemográficas</a></li>
-<li class="chapter" data-level="2.2" data-path="operacionalizacion-vars.html"><a href="operacionalizacion-vars.html#sensibilidad-intercultural-cuant"><i class="fa fa-check"></i><b>2.2</b> Sensibilidad Intercultural (CUANT)</a></li>
+<li class="chapter" data-level="2.2" data-path="operacionalizacion.html"><a href="operacionalizacion.html#sensibilidad-intercultural-cuant"><i class="fa fa-check"></i><b>2.2</b> Sensibilidad Intercultural (CUANT)</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>3</b> Análisis exploratorio de la sensibilidad intercultural</a></li>
+<li class="chapter" data-level="3" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>3</b> Análisis exploratorio de la sensibilidad intercultural</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="02-EDA.html"><a href="#an%C3%A1lisis-exploratorio-de-las-variables-sociodemogr%C3%A1ficas"><i class="fa fa-check"></i><b>3.1</b> Análisis exploratorio de las variables sociodemográficas</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="eda.html"><a href="eda.html#mapa"><i class="fa fa-check"></i><b>3.1.1</b> Mapa</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="02-EDA.html"><a href="#analisis-de-las-variables-del-perfil-acad%C3%A9mico"><i class="fa fa-check"></i><b>3.2</b> Analisis de las variables del perfil académico</a></li>
+<li class="chapter" data-level="3.3" data-path="02-EDA.html"><a href="#an%C3%A1lisis-de-las-variables-de-consumo-cultural-externo-y-proyecci%C3%B3n-intercultural"><i class="fa fa-check"></i><b>3.3</b> Análisis de las variables de consumo cultural externo y proyección intercultural</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="validacion.html"><a href="validacion.html"><i class="fa fa-check"></i><b>4</b> Validación del instrumento</a></li>
 <li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con Bookdown</a></li>
@@ -106,16 +119,665 @@
             <section class="normal" id="section-">
 <div id="eda" class="section level1 hasAnchor" number="3">
 <h1><span class="header-section-number">Capítulo 3</span> Análisis exploratorio de la sensibilidad intercultural<a href="eda.html#eda" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Here is a review of existing methods.</p>
+<p>Aquí realizaremos el análisis exploratorio de los datos del pretest y postest con los grupos de control y experimental.</p>
+<div id="análisis-exploratorio-de-las-variables-sociodemográficas" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Análisis exploratorio de las variables sociodemográficas<a href="#an%C3%A1lisis-exploratorio-de-las-variables-sociodemogr%C3%A1ficas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<table class="table" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:sociodemo">Tabla 3.1: </span><span id="tab:sociodemo">Tabla 3.2: </span>Distribución de variables sociodemográficas (n y %)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:left;">
+Categoría
+</th>
+<th style="text-align:center;">
+n = 48
+</th>
+<th style="text-align:center;">
+porcentaje
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Edad
+</td>
+<td style="text-align:left;">
+15-17 años
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Edad
+</td>
+<td style="text-align:left;">
+18-21 años
+</td>
+<td style="text-align:center;">
+45
+</td>
+<td style="text-align:center;">
+93.75
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Edad
+</td>
+<td style="text-align:left;">
+Más de 22 años
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+4.17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Estrato socioeconómico
+</td>
+<td style="text-align:left;">
+Estrato 1
+</td>
+<td style="text-align:center;">
+16
+</td>
+<td style="text-align:center;">
+33.33
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Estrato socioeconómico
+</td>
+<td style="text-align:left;">
+Estrato 2
+</td>
+<td style="text-align:center;">
+27
+</td>
+<td style="text-align:center;">
+56.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Estrato socioeconómico
+</td>
+<td style="text-align:left;">
+Estrato 3
+</td>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+8.33
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Estrato socioeconómico
+</td>
+<td style="text-align:left;">
+Estrato 4
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Sincelejo
+</td>
+<td style="text-align:center;">
+33
+</td>
+<td style="text-align:center;">
+68.75
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Corozal
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+6.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+El Roble
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+4.17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Magangué
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+4.17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Betulia
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Cereté
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Chinú
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Los Palmitos
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Morroa
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Sampués
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+San Marcos
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lugar donde has vivido la mayor parte de tu vida
+</td>
+<td style="text-align:left;">
+Tuchín
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sexo
+</td>
+<td style="text-align:left;">
+Femenino
+</td>
+<td style="text-align:center;">
+33
+</td>
+<td style="text-align:center;">
+68.75
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sexo
+</td>
+<td style="text-align:left;">
+Masculino
+</td>
+<td style="text-align:center;">
+15
+</td>
+<td style="text-align:center;">
+31.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+¿Te identificas como miembro de una comunidad indígena, afrodescendiente, raizal, palenquero o Rom?
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:center;">
+39
+</td>
+<td style="text-align:center;">
+81.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+¿Te identificas como miembro de una comunidad indígena, afrodescendiente, raizal, palenquero o Rom?
+</td>
+<td style="text-align:left;">
+Si
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+18.75
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="bookdown-demo_files/figure-html/grafsociodemo-1.png" width="672" /></p>
+<div id="mapa" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Mapa<a href="eda.html#mapa" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Este es el mapa del número de estudiantes por municipio.</p>
+<p><img src="bookdown-demo_files/figure-html/mapa-1.png" width="1152" /></p>
+<p>Podemos ver que el número de estudiantes se concentra en el municipio de Sincelejo, seguido de Corozal.</p>
+</div>
+</div>
+<div id="analisis-de-las-variables-del-perfil-académico" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Analisis de las variables del perfil académico<a href="#analisis-de-las-variables-del-perfil-acad%C3%A9mico" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Realicemos el análisis exploratorio del perfil académico y la competencia lingüistica donde los estudiantes tienen nivel de avance académico intermedio</p>
+<table class="table" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:perfilacaycl">Tabla 3.3: </span><span id="tab:perfilacaycl">Tabla 3.4: </span>Distribucion de variables de idiomas (n y %)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:left;">
+Categoria
+</th>
+<th style="text-align:center;">
+n = 48
+</th>
+<th style="text-align:center;">
+porcentaje
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Aparte de ingles y frances, estas estudiando o has estudiado otra lengua?
+</td>
+<td style="text-align:left;">
+Si
+</td>
+<td style="text-align:center;">
+43
+</td>
+<td style="text-align:center;">
+89.58
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Aparte de ingles y frances, estas estudiando o has estudiado otra lengua?
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+10.42
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Que nivel de ingles consideras que tienes?
+</td>
+<td style="text-align:left;">
+A2
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+4.17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Que nivel de ingles consideras que tienes?
+</td>
+<td style="text-align:left;">
+B1
+</td>
+<td style="text-align:center;">
+38
+</td>
+<td style="text-align:center;">
+79.17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Que nivel de ingles consideras que tienes?
+</td>
+<td style="text-align:left;">
+B2
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+14.58
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Que nivel de ingles consideras que tienes?
+</td>
+<td style="text-align:left;">
+C1
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="bookdown-demo_files/figure-html/graficoperfilycl-1.png" width="672" /></p>
+</div>
+<div id="análisis-de-las-variables-de-consumo-cultural-externo-y-proyección-intercultural" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Análisis de las variables de consumo cultural externo y proyección intercultural<a href="#an%C3%A1lisis-de-las-variables-de-consumo-cultural-externo-y-proyecci%C3%B3n-intercultural" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Ahora, hagamos el análisis exploratorio del concumo cultural externo y la proyección intercultural</p>
+<table class="table" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:grafcultural">Tabla 3.5: </span><span id="tab:grafcultural">Tabla 3.6: </span>Distribucion de variables de consumo cultural y movilidad (n y %)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:left;">
+Categoria
+</th>
+<th style="text-align:center;">
+n = 48
+</th>
+<th style="text-align:center;">
+porcentaje
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Frecuencia consumo cultural (entretenimiento)
+</td>
+<td style="text-align:left;">
+Todos los dias
+</td>
+<td style="text-align:center;">
+12
+</td>
+<td style="text-align:center;">
+25.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frecuencia consumo cultural (entretenimiento)
+</td>
+<td style="text-align:left;">
+Casi todos los dias
+</td>
+<td style="text-align:center;">
+27
+</td>
+<td style="text-align:center;">
+56.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frecuencia consumo cultural (entretenimiento)
+</td>
+<td style="text-align:left;">
+Ocasionalmente
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+16.67
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frecuencia consumo cultural (entretenimiento)
+</td>
+<td style="text-align:left;">
+Casi nunca
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2.08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frecuencia consumo cultural (medios)
+</td>
+<td style="text-align:left;">
+Todos los dias
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+6.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frecuencia consumo cultural (medios)
+</td>
+<td style="text-align:left;">
+Casi todos los dias
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+16.67
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frecuencia consumo cultural (medios)
+</td>
+<td style="text-align:left;">
+Ocasionalmente
+</td>
+<td style="text-align:center;">
+24
+</td>
+<td style="text-align:center;">
+50.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frecuencia consumo cultural (medios)
+</td>
+<td style="text-align:left;">
+Casi nunca
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+20.83
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frecuencia consumo cultural (medios)
+</td>
+<td style="text-align:left;">
+Nunca
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+6.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+¿has contemplado mudarte de forma definitiva a un país cuya cultura o lengua consideras distinta a la tuya?
+</td>
+<td style="text-align:left;">
+Si
+</td>
+<td style="text-align:center;">
+40
+</td>
+<td style="text-align:center;">
+83.33
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+¿has contemplado mudarte de forma definitiva a un país cuya cultura o lengua consideras distinta a la tuya?
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+16.67
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="bookdown-demo_files/figure-html/grafcultural-1.png" width="672" /></p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="operacionalizacion-vars.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="referencias.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="operacionalizacion.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="validacion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
