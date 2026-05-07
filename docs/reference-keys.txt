@@ -22,3 +22,11 @@ tab:alphadimension
 tab:cluster
 perfiles-de-sensibilidad-intercultural
 tab:normalmulti
+estudiantes-con-baja-sensibilidad-intercultural
+tab:estbaj
+cuanti
+section
+análsis-exploratorio-pretest-postest
+tab:estmedia
+tab:estalta
+estudiantes-con-sensibilidad-intercultural
