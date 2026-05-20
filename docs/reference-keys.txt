@@ -30,3 +30,14 @@ análsis-exploratorio-pretest-postest
 tab:estmedia
 tab:estalta
 estudiantes-con-sensibilidad-intercultural
+perfiles-de-sensibilidad-intercultural-con-el-pretest
+estudiantes-con-sensibilidad-intercultural-pretest
+perfiles-de-sensibilidad-intercultural-con-el-postest
+estudiantes-con-sensibilidad-intercultural-postest
+tab:estbaj2
+tab:estmedia2
+tab:estalta2
+tab:cluster2
+tab:gruposdeperfiles2
+comparación-de-los-cluster-pretest-y-postest
+análisis-exploratorio-pretest-postest
