@@ -43,3 +43,7 @@ comparación-de-los-cluster-pretest-y-postest
 análisis-exploratorio-pretest-postest
 tab:expcontrol
 fig:grafica-perfiles
+tab:cluster20
+comparación-de-los-mapas-de-clusters
+tab:gruposdeperfiles
+tab:normalidadperfilespostestk2
