@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="" xml:lang="">
+<html lang="es" xml:lang="es">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Capítulo 5 Análisis cuantitativo de sensibilidad intercultural | Analisis de datos de sensibilidad intercultural</title>
   <meta name="description" content="En este documento realizaremos el analisis exploratorio de los datos y sus respectiva parte inferencial de la sensibilidad intercultural" />
-  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Capítulo 5 Análisis cuantitativo de sensibilidad intercultural | Analisis de datos de sensibilidad intercultural" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="En este documento realizaremos el analisis exploratorio de los datos y sus respectiva parte inferencial de la sensibilidad intercultural" />
-  <meta name="github-repo" content="rstudio/bookdown-demo" />
+  
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Capítulo 5 Análisis cuantitativo de sensibilidad intercultural | Analisis de datos de sensibilidad intercultural" />
@@ -54,14 +54,99 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
-<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
 
 
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 <style type="text/css">
   
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -83,30 +168,35 @@
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Contexto del problema</a></li>
 <li class="chapter" data-level="2" data-path="operacionalizacion.html"><a href="operacionalizacion.html"><i class="fa fa-check"></i><b>2</b> Operacionalización de las variables</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="04-cuanti.html"><a href="#variables-sociodemogr%C3%A1ficas"><i class="fa fa-check"></i><b>2.1</b> Variables sociodemográficas</a></li>
+<li class="chapter" data-level="2.1" data-path="operacionalizacion.html"><a href="operacionalizacion.html#variables-sociodemogr%C3%A1ficas"><i class="fa fa-check"></i><b>2.1</b> Variables sociodemográficas</a></li>
 <li class="chapter" data-level="2.2" data-path="operacionalizacion.html"><a href="operacionalizacion.html#sensibilidad-intercultural-cuant"><i class="fa fa-check"></i><b>2.2</b> Sensibilidad Intercultural (CUANT)</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>3</b> Análisis exploratorio de la sensibilidad intercultural</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="04-cuanti.html"><a href="#an%C3%A1lisis-exploratorio-de-las-variables-sociodemogr%C3%A1ficas"><i class="fa fa-check"></i><b>3.1</b> Análisis exploratorio de las variables sociodemográficas</a>
+<li class="chapter" data-level="3.1" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-exploratorio-de-las-variables-sociodemogr%C3%A1ficas"><i class="fa fa-check"></i><b>3.1</b> Análisis exploratorio de las variables sociodemográficas</a>
 <ul>
 <li class="chapter" data-level="3.1.1" data-path="eda.html"><a href="eda.html#mapa"><i class="fa fa-check"></i><b>3.1.1</b> Mapa</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="04-cuanti.html"><a href="#analisis-de-las-variables-del-perfil-acad%C3%A9mico"><i class="fa fa-check"></i><b>3.2</b> Analisis de las variables del perfil académico</a></li>
-<li class="chapter" data-level="3.3" data-path="04-cuanti.html"><a href="#an%C3%A1lisis-de-las-variables-de-consumo-cultural-externo-y-proyecci%C3%B3n-intercultural"><i class="fa fa-check"></i><b>3.3</b> Análisis de las variables de consumo cultural externo y proyección intercultural</a></li>
+<li class="chapter" data-level="3.2" data-path="eda.html"><a href="eda.html#analisis-de-las-variables-del-perfil-acad%C3%A9mico"><i class="fa fa-check"></i><b>3.2</b> Analisis de las variables del perfil académico</a></li>
+<li class="chapter" data-level="3.3" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-de-las-variables-de-consumo-cultural-externo-y-proyecci%C3%B3n-intercultural"><i class="fa fa-check"></i><b>3.3</b> Análisis de las variables de consumo cultural externo y proyección intercultural</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="validacion.html"><a href="validacion.html"><i class="fa fa-check"></i><b>4</b> Validación del instrumento</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="04-cuanti.html"><a href="#preparaci%C3%B3n-y-limpieza-de-la-identidad-escalar"><i class="fa fa-check"></i><b>4.1</b> Preparación y limpieza de la identidad escalar</a></li>
-<li class="chapter" data-level="4.2" data-path="04-cuanti.html"><a href="#validaci%C3%B3n-psicom%C3%A9trica-de-la-muestra"><i class="fa fa-check"></i><b>4.2</b> Validación psicométrica de la muestra</a></li>
+<li class="chapter" data-level="4.1" data-path="validacion.html"><a href="validacion.html#preparaci%C3%B3n-y-limpieza-de-la-identidad-escalar"><i class="fa fa-check"></i><b>4.1</b> Preparación y limpieza de la identidad escalar</a></li>
+<li class="chapter" data-level="4.2" data-path="validacion.html"><a href="validacion.html#validaci%C3%B3n-psicom%C3%A9trica-de-la-muestra"><i class="fa fa-check"></i><b>4.2</b> Validación psicométrica de la muestra</a></li>
 <li class="chapter" data-level="4.3" data-path="validacion.html"><a href="validacion.html#perfiles-de-sensibilidad-intercultural-con-el-pretest"><i class="fa fa-check"></i><b>4.3</b> Perfiles de sensibilidad intercultural con el pretest</a></li>
 <li class="chapter" data-level="4.4" data-path="validacion.html"><a href="validacion.html#estudiantes-con-sensibilidad-intercultural-pretest"><i class="fa fa-check"></i><b>4.4</b> Estudiantes con sensibilidad intercultural pretest</a></li>
 <li class="chapter" data-level="4.5" data-path="validacion.html"><a href="validacion.html#perfiles-de-sensibilidad-intercultural-con-el-postest"><i class="fa fa-check"></i><b>4.5</b> Perfiles de sensibilidad intercultural con el postest</a></li>
-<li class="chapter" data-level="4.6" data-path="04-cuanti.html"><a href="#comparaci%C3%B3n-de-los-mapas-de-clusters"><i class="fa fa-check"></i><b>4.6</b> Comparación de los mapas de clusters</a></li>
+<li class="chapter" data-level="4.6" data-path="validacion.html"><a href="validacion.html#comparaci%C3%B3n-de-los-mapas-de-clusters"><i class="fa fa-check"></i><b>4.6</b> Comparación de los mapas de clusters</a></li>
+<li class="chapter" data-level="4.7" data-path="validacion.html"><a href="validacion.html#conclusiones"><i class="fa fa-check"></i><b>4.7</b> Conclusiones</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cuanti.html"><a href="cuanti.html"><i class="fa fa-check"></i><b>5</b> Análisis cuantitativo de sensibilidad intercultural</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="04-cuanti.html"><a href="#an%C3%A1lisis-exploratorio-pretest-postest"><i class="fa fa-check"></i><b>5.1</b> Análisis exploratorio pretest postest</a></li>
+<li class="chapter" data-level="5.1" data-path="cuanti.html"><a href="cuanti.html#an%C3%A1lisis-exploratorio-pretest-postest"><i class="fa fa-check"></i><b>5.1</b> Análisis exploratorio pretest postest</a></li>
+<li class="chapter" data-level="5.2" data-path="cuanti.html"><a href="cuanti.html#equivalencia-inicial-de-los-grupos"><i class="fa fa-check"></i><b>5.2</b> Equivalencia inicial de los grupos</a></li>
+<li class="chapter" data-level="5.3" data-path="cuanti.html"><a href="cuanti.html#efecto-de-la-intervenci%C3%B3n-interacci%C3%B3n-grupo-tiempo"><i class="fa fa-check"></i><b>5.3</b> Efecto de la intervención: interacción Grupo × Tiempo</a></li>
+<li class="chapter" data-level="5.4" data-path="cuanti.html"><a href="cuanti.html#cambio-dentro-de-cada-grupo"><i class="fa fa-check"></i><b>5.4</b> Cambio dentro de cada grupo</a></li>
+<li class="chapter" data-level="5.5" data-path="cuanti.html"><a href="cuanti.html#transici%C3%B3n-entre-perfiles-de-sensibilidad-intercultural"><i class="fa fa-check"></i><b>5.5</b> Transición entre perfiles de sensibilidad intercultural</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
 <li class="divider"></li>
@@ -133,8 +223,8 @@
 <h1><span class="header-section-number">Capítulo 5</span> Análisis cuantitativo de sensibilidad intercultural<a href="cuanti.html#cuanti" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Realizaremos un análisis exploratorio con las dimensiones según pretest y postest usando la comparación de grupo experimental y control.</p>
 <div id="análisis-exploratorio-pretest-postest" class="section level2 hasAnchor" number="5.1">
-<h2><span class="header-section-number">5.1</span> Análisis exploratorio pretest postest<a href="#an%C3%A1lisis-exploratorio-pretest-postest" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<table class="table table-striped table-hover table-condensed" style="font-size: 10px; color: black; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<h2><span class="header-section-number">5.1</span> Análisis exploratorio pretest postest<a href="cuanti.html#an%C3%A1lisis-exploratorio-pretest-postest" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<table class="table table-striped table-hover table-condensed" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption style="font-size: initial !important;">
 <span id="tab:expcontrol">Tabla 5.1: </span>Tabla 3.1. Estadisticos descriptivos por dimension, grupo y momento de medicion
 </caption>
@@ -824,7 +914,604 @@ Figura 5.1: Perfiles de interacción Grupo × Tiempo para cada dimensión del IS
 </p>
 </div>
 <p>El gráfico de perfiles Grupo x Tiempo permite visualizar el patrón de cambio en cada dimensión. Únicamente en Respeto se observa una divergencia clara entre grupos: mientras el grupo Control mantuvo una media estable entre momentos (M=3.705 en ambos), el grupo Experimental mostró un incremento sostenido (de 3.668 a 3.913), sugiriendo un posible efecto específico de la intervención en esta dimensión. En las restantes dimensiones (Atención, Implicación, Confianza) y en la puntuación global, las trayectorias de ambos grupos resultaron prácticamente paralelas, lo que es más compatible con un efecto general de tiempo (familiarización con el instrumento o maduración) que con un efecto diferencial atribuible a la intervención. Esta interpretación visual debe confirmarse mediante una prueba formal de interacción Grupo × Tiempo antes de establecer conclusiones definitivas sobre la efectividad diferencial del programa.</p>
+</div>
+<div id="equivalencia-inicial-de-los-grupos" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Equivalencia inicial de los grupos<a href="cuanti.html#equivalencia-inicial-de-los-grupos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Antes de comparar los cambios entre grupos, se verificó que ambos partieran de niveles similares de sensibilidad intercultural. Para ello se compararon las puntuaciones del Pretest de los 43 estudiantes con Postest mediante la prueba U de Mann-Whitney.</p>
+<table>
+<caption><span id="tab:equivalencia">Tabla 5.2: </span>Equivalencia inicial de los grupos en el Pretest (U de Mann-Whitney)</caption>
+<thead>
+<tr class="header">
+<th align="left">Dimension</th>
+<th align="right">M_Control</th>
+<th align="right">M_Experimental</th>
+<th align="right">U</th>
+<th align="right">p</th>
+<th align="right">r</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">D1_Atencion</td>
+<td align="right">4.305</td>
+<td align="right">4.378</td>
+<td align="right">181.5</td>
+<td align="right">0.472</td>
+<td align="right">0.110</td>
+</tr>
+<tr class="even">
+<td align="left">D2_Respeto</td>
+<td align="right">3.705</td>
+<td align="right">3.668</td>
+<td align="right">234.5</td>
+<td align="right">0.536</td>
+<td align="right">0.094</td>
+</tr>
+<tr class="odd">
+<td align="left">D3_Implicacion</td>
+<td align="right">4.400</td>
+<td align="right">4.524</td>
+<td align="right">186.0</td>
+<td align="right">0.538</td>
+<td align="right">0.094</td>
+</tr>
+<tr class="even">
+<td align="left">D4_Confianza</td>
+<td align="right">3.233</td>
+<td align="right">3.241</td>
+<td align="right">202.5</td>
+<td align="right">0.857</td>
+<td align="right">0.027</td>
+</tr>
+<tr class="odd">
+<td align="left">ISS_Global</td>
+<td align="right">3.914</td>
+<td align="right">3.946</td>
+<td align="right">190.5</td>
+<td align="right">0.628</td>
+<td align="right">0.074</td>
+</tr>
+</tbody>
+</table>
+<p>No se encontraron diferencias significativas entre los grupos en ninguna dimensión ni en la puntuación global (todas las <span class="math inline">\(p&gt;.47\)</span>; <span class="math inline">\(r\leq.11\)</span>), por lo que ambos grupos eran equivalentes al inicio de la intervención y la comparación de sus cambios es legítima.</p>
+<p>Dado que los cinco estudiantes que no respondieron el Postest pertenecían al grupo Control, se examinó si esta pérdida pudo sesgar la comparación, contrastando su Pretest con el de los 15 estudiantes del grupo Control que sí completaron ambas aplicaciones.</p>
+<table>
+<caption><span id="tab:perdida-participantes">Tabla 5.3: </span>Pretest del grupo Control según hayan respondido o no el Postest (U de Mann-Whitney)</caption>
+<thead>
+<tr class="header">
+<th align="left">Dimension</th>
+<th align="right">M sin postest (n=5)</th>
+<th align="right">M con postest (n=15)</th>
+<th align="right">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">D1_Atencion</td>
+<td align="right">4.600</td>
+<td align="right">4.305</td>
+<td align="right">0.160</td>
+</tr>
+<tr class="even">
+<td align="left">D2_Respeto</td>
+<td align="right">3.771</td>
+<td align="right">3.705</td>
+<td align="right">0.725</td>
+</tr>
+<tr class="odd">
+<td align="left">D3_Implicacion</td>
+<td align="right">4.467</td>
+<td align="right">4.400</td>
+<td align="right">0.858</td>
+</tr>
+<tr class="even">
+<td align="left">D4_Confianza</td>
+<td align="right">2.850</td>
+<td align="right">3.233</td>
+<td align="right">0.428</td>
+</tr>
+<tr class="odd">
+<td align="left">ISS_Global</td>
+<td align="right">3.971</td>
+<td align="right">3.914</td>
+<td align="right">0.759</td>
+</tr>
+</tbody>
+</table>
+<p>Los estudiantes que abandonaron el estudio no difirieron de quienes lo completaron (todas las <span class="math inline">\(p&gt;.16\)</span>), por lo que no hay indicios de que la pérdida de participantes haya sesgado la composición del grupo Control.</p>
+</div>
+<div id="efecto-de-la-intervención-interacción-grupo-tiempo" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Efecto de la intervención: interacción Grupo × Tiempo<a href="cuanti.html#efecto-de-la-intervenci%C3%B3n-interacci%C3%B3n-grupo-tiempo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para evaluar si el grupo Experimental cambió más que el grupo Control, se aplicaron tres aproximaciones complementarias: (a) un análisis de covarianza (ANCOVA) sobre el Postest controlando por el Pretest, recomendado para diseños pretest-postest por su mayor potencia estadística; (b) un modelo lineal mixto con efectos fijos de Tiempo, Grupo y su interacción y un intercepto aleatorio por estudiante, que permite incluir a los 48 participantes, incluidos los cinco sin Postest; y (c) como alternativa robusta ante la falta de normalidad de algunas dimensiones, la comparación de las ganancias (Postest − Pretest) entre grupos mediante la prueba U de Mann-Whitney.</p>
+<table>
+<caption><span id="tab:interaccion">Tabla 5.4: </span>Efecto de la intervención: ANCOVA (n=43), modelo mixto (n=48) y comparación de ganancias (n=43)</caption>
+<colgroup>
+<col width="14%" />
+<col width="21%" />
+<col width="9%" />
+<col width="9%" />
+<col width="5%" />
+<col width="18%" />
+<col width="8%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Dimension</th>
+<th align="right">ANCOVA: dif. ajustada</th>
+<th align="right">ANCOVA: F</th>
+<th align="right">ANCOVA: p</th>
+<th align="right">η²p</th>
+<th align="right">Mixto: interacción</th>
+<th align="right">Mixto: p</th>
+<th align="right">Ganancias: p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">D1_Atencion</td>
+<td align="right">0.048</td>
+<td align="right">0.27</td>
+<td align="right">0.604</td>
+<td align="right">0.007</td>
+<td align="right">0.042</td>
+<td align="right">0.705</td>
+<td align="right">0.898</td>
+</tr>
+<tr class="even">
+<td align="left">D2_Respeto</td>
+<td align="right">0.219</td>
+<td align="right">2.02</td>
+<td align="right">0.163</td>
+<td align="right">0.048</td>
+<td align="right">0.258</td>
+<td align="right">0.125</td>
+<td align="right">0.385</td>
+</tr>
+<tr class="odd">
+<td align="left">D3_Implicacion</td>
+<td align="right">-0.038</td>
+<td align="right">0.09</td>
+<td align="right">0.766</td>
+<td align="right">0.002</td>
+<td align="right">-0.115</td>
+<td align="right">0.456</td>
+<td align="right">0.659</td>
+</tr>
+<tr class="even">
+<td align="left">D4_Confianza</td>
+<td align="right">0.013</td>
+<td align="right">0.00</td>
+<td align="right">0.945</td>
+<td align="right">0.000</td>
+<td align="right">-0.034</td>
+<td align="right">0.873</td>
+<td align="right">0.949</td>
+</tr>
+<tr class="odd">
+<td align="left">ISS_Global</td>
+<td align="right">0.080</td>
+<td align="right">0.91</td>
+<td align="right">0.346</td>
+<td align="right">0.022</td>
+<td align="right">0.074</td>
+<td align="right">0.411</td>
+<td align="right">0.532</td>
+</tr>
+</tbody>
+</table>
+<p>Ninguna de las tres aproximaciones detectó un efecto diferencial significativo de la intervención: el grupo Experimental no cambió significativamente más que el grupo Control en ninguna dimensión ni en la puntuación global. Respeto fue la única dimensión en la que las tres pruebas coincidieron en señalar una ventaja del grupo Experimental (diferencia ajustada = 0.219, <span class="math inline">\(\eta^2_p=.048\)</span>; interacción en el modelo mixto = 0.258), de magnitud pequeña a moderada, aunque sin alcanzar significancia estadística (ANCOVA <span class="math inline">\(p=.163\)</span>; modelo mixto <span class="math inline">\(p=.125\)</span>; ganancias <span class="math inline">\(p=.385\)</span>). Por tanto, la divergencia observada en Respeto en el gráfico de perfiles debe interpretarse como una tendencia y no como un efecto demostrado.</p>
+<p>El modelo mixto mostró, además, un efecto principal del Tiempo en Confianza (<span class="math inline">\(b=0.427\)</span>, <span class="math inline">\(p=.015\)</span>), indicando que ambos grupos incrementaron su seguridad en la interacción intercultural en una magnitud similar. Debe considerarse que, con grupos de 15 y 28 estudiantes, el estudio solo dispone de potencia suficiente (80%) para detectar diferencias grandes entre grupos (<span class="math inline">\(d\approx0.9\)</span>), de modo que efectos de la magnitud observada en Respeto requerirían muestras considerablemente mayores para ser confirmados.</p>
+<p>Finalmente, se verificaron los supuestos del ANCOVA: (a) la homogeneidad de las pendientes de regresión, mediante el término de interacción Pretest × Grupo; (b) la normalidad de los residuos, con la prueba de Shapiro-Wilk; y (c) la homogeneidad de varianzas entre grupos, con la prueba de Levene (basada en la mediana). Además, dado que algunas dimensiones no cumplen el supuesto de normalidad, el efecto de Grupo se estimó también con errores estándar robustos HC3 (<span class="citation">Long y Ervin (<a href="#ref-longervin2000">2000</a>)</span>) y mediante una prueba de permutación con 9 999 permutaciones de las etiquetas de grupo, que conserva el par Pretest-Postest de cada estudiante y no requiere normalidad.</p>
+<table>
+<caption><span id="tab:supuestos-ancova">Tabla 5.5: </span>Supuestos del ANCOVA y estimaciones robustas del efecto de Grupo (n=43)</caption>
+<colgroup>
+<col width="13%" />
+<col width="12%" />
+<col width="14%" />
+<col width="9%" />
+<col width="12%" />
+<col width="9%" />
+<col width="14%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Dimension</th>
+<th align="right">Pendientes: p</th>
+<th align="right">Shapiro-Wilk: p</th>
+<th align="right">Levene: p</th>
+<th align="right">Dif. ajustada</th>
+<th align="right">p clásico</th>
+<th align="right">p robusto (HC3)</th>
+<th align="right">p permutación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">D1_Atencion</td>
+<td align="right">0.492</td>
+<td align="right">0.864</td>
+<td align="right">0.925</td>
+<td align="right">0.048</td>
+<td align="right">0.604</td>
+<td align="right">0.625</td>
+<td align="right">0.598</td>
+</tr>
+<tr class="even">
+<td align="left">D2_Respeto</td>
+<td align="right">0.664</td>
+<td align="right">0.004</td>
+<td align="right">0.246</td>
+<td align="right">0.219</td>
+<td align="right">0.163</td>
+<td align="right">0.250</td>
+<td align="right">0.165</td>
+</tr>
+<tr class="odd">
+<td align="left">D3_Implicacion</td>
+<td align="right">0.153</td>
+<td align="right">0.004</td>
+<td align="right">0.929</td>
+<td align="right">-0.038</td>
+<td align="right">0.766</td>
+<td align="right">0.772</td>
+<td align="right">0.758</td>
+</tr>
+<tr class="even">
+<td align="left">D4_Confianza</td>
+<td align="right">0.176</td>
+<td align="right">0.734</td>
+<td align="right">0.146</td>
+<td align="right">0.013</td>
+<td align="right">0.945</td>
+<td align="right">0.955</td>
+<td align="right">0.950</td>
+</tr>
+<tr class="odd">
+<td align="left">ISS_Global</td>
+<td align="right">0.121</td>
+<td align="right">0.118</td>
+<td align="right">0.288</td>
+<td align="right">0.080</td>
+<td align="right">0.346</td>
+<td align="right">0.391</td>
+<td align="right">0.348</td>
+</tr>
+</tbody>
+</table>
+<p>No se encontraron diferencias significativas entre las pendientes de regresión de ambos grupos en ninguna dimensión (todas las <span class="math inline">\(p&gt;.12\)</span>), y las varianzas residuales fueron homogéneas (todas las <span class="math inline">\(p&gt;.14\)</span>), por lo que el ANCOVA resulta apropiado para estos datos. El supuesto de normalidad de los residuos no se cumplió en Respeto ni en Implicación (<span class="math inline">\(p=.004\)</span> en ambas), coherente con el efecto techo y el caso atípico identificados en el Capítulo <a href="validacion.html#validacion">4</a>. No obstante, las estimaciones robustas condujeron a las mismas conclusiones que el ANCOVA clásico: en Respeto, la prueba de permutación (<span class="math inline">\(p=.165\)</span>) reprodujo prácticamente el valor clásico (<span class="math inline">\(p=.163\)</span>) y la estimación con errores robustos fue aún más conservadora (<span class="math inline">\(p=.250\)</span>). En consecuencia, la ausencia de un efecto diferencial significativo de la intervención no obedece a la violación de supuestos.</p>
+</div>
+<div id="cambio-dentro-de-cada-grupo" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Cambio dentro de cada grupo<a href="cuanti.html#cambio-dentro-de-cada-grupo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para describir la magnitud del cambio en cada grupo, se compararon el Pretest y el Postest mediante la prueba de Wilcoxon para muestras pareadas en Atención, Respeto, Implicación y la puntuación global, y mediante la prueba t de Student pareada en Confianza, la única dimensión que cumplió el supuesto de normalidad en ambas mediciones. Los valores p se ajustaron por comparaciones múltiples dentro de cada grupo con el método de Holm.</p>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:cambio-intragrupo">Tabla 5.6: </span>Cambio Pretest-Postest dentro de cada grupo (Wilcoxon pareado; t pareada en Confianza)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Grupo
+</th>
+<th style="text-align:left;">
+Dimension
+</th>
+<th style="text-align:right;">
+Pretest
+</th>
+<th style="text-align:right;">
+Postest
+</th>
+<th style="text-align:right;">
+Cambio
+</th>
+<th style="text-align:right;">
+p
+</th>
+<th style="text-align:left;">
+Efecto
+</th>
+<th style="text-align:right;">
+p_Holm
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="5">
+Control
+</td>
+<td style="text-align:left;">
+D1_Atencion
+</td>
+<td style="text-align:right;">
+4.305
+</td>
+<td style="text-align:right;">
+4.438
+</td>
+<td style="text-align:right;">
+0.133
+</td>
+<td style="text-align:right;">
+0.213
+</td>
+<td style="text-align:left;">
+r = 0.38
+</td>
+<td style="text-align:right;">
+0.425
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D2_Respeto
+</td>
+<td style="text-align:right;">
+3.705
+</td>
+<td style="text-align:right;">
+3.705
+</td>
+<td style="text-align:right;">
+-0.000
+</td>
+<td style="text-align:right;">
+0.529
+</td>
+<td style="text-align:left;">
+r = 0.18
+</td>
+<td style="text-align:right;">
+0.529
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D3_Implicacion
+</td>
+<td style="text-align:right;">
+4.400
+</td>
+<td style="text-align:right;">
+4.622
+</td>
+<td style="text-align:right;">
+0.222
+</td>
+<td style="text-align:right;">
+0.079
+</td>
+<td style="text-align:left;">
+r = 0.56
+</td>
+<td style="text-align:right;">
+0.324
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D4_Confianza
+</td>
+<td style="text-align:right;">
+3.233
+</td>
+<td style="text-align:right;">
+3.617
+</td>
+<td style="text-align:right;">
+0.383
+</td>
+<td style="text-align:right;">
+0.075
+</td>
+<td style="text-align:left;">
+dz = 0.50
+</td>
+<td style="text-align:right;">
+0.324
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ISS_Global
+</td>
+<td style="text-align:right;">
+3.914
+</td>
+<td style="text-align:right;">
+4.063
+</td>
+<td style="text-align:right;">
+0.149
+</td>
+<td style="text-align:right;">
+0.065
+</td>
+<td style="text-align:left;">
+r = 0.48
+</td>
+<td style="text-align:right;">
+0.324
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="5">
+Experimental
+</td>
+<td style="text-align:left;">
+D1_Atencion
+</td>
+<td style="text-align:right;">
+4.378
+</td>
+<td style="text-align:right;">
+4.520
+</td>
+<td style="text-align:right;">
+0.143
+</td>
+<td style="text-align:right;">
+0.055
+</td>
+<td style="text-align:left;">
+r = 0.39
+</td>
+<td style="text-align:right;">
+0.109
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D2_Respeto
+</td>
+<td style="text-align:right;">
+3.668
+</td>
+<td style="text-align:right;">
+3.913
+</td>
+<td style="text-align:right;">
+0.245
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:left;">
+r = 0.48
+</td>
+<td style="text-align:right;">
+0.039
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D3_Implicacion
+</td>
+<td style="text-align:right;">
+4.524
+</td>
+<td style="text-align:right;">
+4.619
+</td>
+<td style="text-align:right;">
+0.095
+</td>
+<td style="text-align:right;">
+0.253
+</td>
+<td style="text-align:left;">
+r = 0.25
+</td>
+<td style="text-align:right;">
+0.253
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D4_Confianza
+</td>
+<td style="text-align:right;">
+3.241
+</td>
+<td style="text-align:right;">
+3.634
+</td>
+<td style="text-align:right;">
+0.393
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:left;">
+dz = 0.65
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ISS_Global
+</td>
+<td style="text-align:right;">
+3.946
+</td>
+<td style="text-align:right;">
+4.163
+</td>
+<td style="text-align:right;">
+0.218
+</td>
+<td style="text-align:right;">
+&lt;.001
+</td>
+<td style="text-align:left;">
+r = 0.69
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+</tr>
+</tbody>
+</table>
+<p>El grupo Experimental mostró mejoras significativas tras el ajuste de Holm en Respeto (<span class="math inline">\(+0.245\)</span>; <span class="math inline">\(p=.039\)</span>; <span class="math inline">\(r=.48\)</span>), Confianza (<span class="math inline">\(+0.393\)</span>; <span class="math inline">\(p=.008\)</span>; <span class="math inline">\(d_z=.65\)</span>) y la puntuación global (<span class="math inline">\(+0.218\)</span>; <span class="math inline">\(p=.002\)</span>; <span class="math inline">\(r=.69\)</span>), mientras que el grupo Control no presentó cambios significativos tras el ajuste, aunque mostró tendencias de mejora en Implicación, Confianza y la puntuación global. Sin embargo, estos resultados deben leerse junto con los de la sección anterior: que un grupo alcance significancia y el otro no, no implica que ambos difieran entre sí. En Confianza, por ejemplo, el cambio fue prácticamente idéntico en los dos grupos (<span class="math inline">\(+0.383\)</span> y <span class="math inline">\(+0.393\)</span>), y la menor significancia del Control obedece principalmente a su menor tamaño. La excepción es Respeto, donde el grupo Control no registró cambio alguno (<span class="math inline">\(0.000\)</span>) frente a la mejora del grupo Experimental, lo que es coherente con la tendencia descrita anteriormente.</p>
+</div>
+<div id="transición-entre-perfiles-de-sensibilidad-intercultural" class="section level2 hasAnchor" number="5.5">
+<h2><span class="header-section-number">5.5</span> Transición entre perfiles de sensibilidad intercultural<a href="cuanti.html#transici%C3%B3n-entre-perfiles-de-sensibilidad-intercultural" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Dado que las filas de ambas aplicaciones corresponden al mismo estudiante, fue posible examinar si cada participante cambió de perfil entre el Pretest y el Postest, y si estas transiciones difirieron entre grupos. Los perfiles corresponden a la solución de dos clusters obtenida en cada fase (Capítulo <a href="validacion.html#validacion">4</a>), identificados por su denominación sustantiva.</p>
+<table>
+<caption><span id="tab:transicion-perfiles">Tabla 5.7: </span>Transición de perfiles entre Pretest y Postest por grupo</caption>
+<colgroup>
+<col width="15%" />
+<col width="3%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Grupo</th>
+<th align="right">n</th>
+<th align="right">Baja → Baja</th>
+<th align="right">Baja → Alta</th>
+<th align="right">Alta → Baja</th>
+<th align="right">Alta → Alta</th>
+<th align="right">McNemar exacto (p)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="right">15</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">8</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="even">
+<td align="left">Experimental</td>
+<td align="right">28</td>
+<td align="right">5</td>
+<td align="right">4</td>
+<td align="right">3</td>
+<td align="right">16</td>
+<td align="right">1.000</td>
+</tr>
+</tbody>
+</table>
+<p>La mayoría de los estudiantes se mantuvo en su perfil inicial en ambos grupos (12 de 15 en el Control y 21 de 28 en el Experimental). Los cambios ocurrieron en ambas direcciones: en el grupo Control, dos estudiantes pasaron de Baja a Alta Sensibilidad y uno retrocedió, y en el grupo Experimental cuatro mejoraron de perfil y tres retrocedieron, con un balance neto de un estudiante en cada grupo. Ninguno de estos cambios fue significativo (McNemar exacto, <span class="math inline">\(p=1.00\)</span> en ambos grupos), y la proporción de estudiantes que partieron de Baja Sensibilidad y alcanzaron el perfil de Alta Sensibilidad tampoco difirió entre grupos (2 de 6 en el Control frente a 4 de 9 en el Experimental). En consecuencia, el aumento agregado de la proporción de estudiantes con Alta Sensibilidad descrito en el Capítulo <a href="validacion.html#validacion">4</a> no puede atribuirse a la intervención, sino a movimientos individuales en ambos sentidos presentes en los dos grupos.</p>
 
+</div>
+</div>
+<h3>Referencias<a href="referencias.html#referencias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-longervin2000" class="csl-entry">
+Long, J. Scott, y Laurie H. Ervin. 2000. <span>«Using Heteroscedasticity Consistent Standard Errors in the Linear Regression Model»</span>. <em>The American Statistician</em> 54 (3): 217-24. <a href="https://doi.org/10.1080/00031305.2000.10474549">https://doi.org/10.1080/00031305.2000.10474549</a>.
 </div>
 </div>
             </section>
@@ -847,25 +1534,15 @@ Figura 5.1: Perfiles de interacción Grupo × Tiempo para cada dimensión del IS
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-  "sharing": {
-    "github": false,
-    "facebook": true,
-    "twitter": true,
-    "linkedin": false,
-    "weibo": false,
-    "instapaper": false,
-    "vk": false,
-    "whatsapp": false,
-    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-  },
+  "sharing": false,
   "fontsettings": {
     "theme": "white",
     "family": "sans",
     "size": 2
   },
   "edit": {
-    "link": "https://github.com/rstudio/bookdown-demo/edit/master/04-cuanti.Rmd",
-    "text": "Edit"
+    "link": null,
+    "text": null
   },
   "history": {
     "link": null,
@@ -875,7 +1552,7 @@ gitbook.start({
     "link": null,
     "text": null
   },
-  "download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+  "download": null,
   "search": {
     "engine": "fuse",
     "options": null
@@ -887,6 +1564,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

@@ -1,0 +1,259 @@
+# Análisis cuantitativo de sensibilidad intercultural {#cuanti}
+
+Realizaremos un análisis exploratorio con las dimensiones según pretest y postest usando la comparación de grupo experimental y control.
+
+## Análisis exploratorio pretest postest
+
+```{r expcontrol}
+# Pretest y postest de los 43 estudiantes que respondieron ambas aplicaciones
+resumen_pp <- bind_rows(Pretest = pre_pareado, Postest = post, .id = "Tiempo") %>%
+  select(Tiempo, Grupo = Var_Grupo, all_of(dims_validas), ISS_Global) %>%
+  pivot_longer(c(all_of(dims_validas), ISS_Global), names_to = "Dimension") %>%
+  mutate(Tiempo = factor(Tiempo, levels = c("Pretest", "Postest"))) %>%
+  group_by(Dimension, Grupo, Tiempo) %>%
+  summarise(n = n(), M = mean(value), DE = sd(value), Mediana = median(value),
+            Min = min(value), Max = max(value), EE = DE / sqrt(n), .groups = "drop_last") %>%
+  # El cambio se calcula sobre las medias redondeadas a 3 decimales, como en la tabla reportada
+  mutate(Cambio = round(M[Tiempo == "Postest"], 3) - round(M[Tiempo == "Pretest"], 3),
+         `Cambio %` = 100 * Cambio / round(M[Tiempo == "Pretest"], 3)) %>%
+  ungroup()
+
+resumen_pp %>%
+  select(-EE) %>%
+  mutate(across(c(M, DE, Mediana, Min, Max, Cambio), ~ sprintf("%.3f", .x)),
+         `Cambio %` = sprintf("%.1f", `Cambio %`)) %>%
+  knitr::kable(caption = "Tabla 3.1. Estadisticos descriptivos por dimension, grupo y momento de medicion",
+               align = "llrrrrrrrrr", format = "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE, font_size = 10) %>%
+  collapse_rows(columns = 1:2, valign = "middle") %>%
+  footnote(general = "M = Media; DE = Desviacion estandar; Cambio = Postest − Pretest; Cambio % = porcentaje de cambio relativo al pretest.",
+           general_title = "Nota.", footnote_as_chunk = TRUE)
+```
+
+La Tabla 3.1 presenta los estadísticos descriptivos de las cuatro dimensiones de la Sensibilidad Intercultural (Atención, Respeto, Implicación y Confianza) y de la puntuación global del ISS, diferenciados por grupo (Control y Experimental) y momento de medición (Pretest y Postest). En términos generales, ambos grupos mostraron incrementos en las puntuaciones medias tras la intervención, aunque la magnitud y consistencia de dichos cambios varió según la dimensión, sin un patrón uniforme a favor del grupo experimental en todos los casos.
+
+En Atención (D1), ambos grupos partieron de niveles ya elevados y mostraron incrementos modestos y prácticamente equivalentes: el grupo Control pasó de 4.305 (DE=0.362) a 4.438 (DE=0.308) (+3.1%), y el grupo Experimental de 4.378 (DE=0.417) a 4.520 (DE=0.355) (+3.2%). No se observa, en esta dimensión, una diferencia apreciable entre grupos.
+
+En Respeto (D2), el grupo Control no mostró cambio en su media (M=3.705 en ambos momentos, 0.0%), aunque sí un notable aumento en su dispersión (DE de 0.339 a 0.656), lo que sugiere una mayor heterogeneidad de respuestas dentro del grupo tras la intervención, posiblemente asociada a casos individuales atípicos. El grupo Experimental, en cambio, aumentó de 3.668 (DE=0.367) a 3.913 (DE=0.365) (+6.7%), siendo esta la dimensión con la diferencia más clara a favor del grupo experimental.
+
+En Implicación (D3), el patrón fue inverso al esperado: el grupo Control mostró el mayor incremento relativo, pasando de 4.400 (DE=0.523) a 4.622 (DE=0.452) (+5.0%), mientras que el grupo Experimental avanzó en menor magnitud, de 4.524 (DE=0.368) a 4.619 (DE=0.371) (+2.1%). Este resultado no respalda un efecto diferencial de la intervención en esta dimensión específica y debe reportarse sin sobreinterpretar la narrativa general de mejora asociada al grupo experimental.
+
+En Confianza (D4), ambos grupos experimentaron el mayor incremento relativo de las cuatro dimensiones, con magnitudes muy similares entre sí: el grupo Control pasó de 3.233 (DE=0.691) a 3.617 (DE=0.940) (+11.9%), y el grupo Experimental de 3.241 (DE=0.709) a 3.634 (DE=0.534) (+12.1%). La ausencia de diferencia apreciable entre grupos en esta dimensión, pese a ser la de mayor cambio absoluto, sugiere un efecto de maduración o familiarización común a ambos grupos más que un efecto específico de la intervención.
+
+Finalmente, en la puntuación global (ISS_Global), ambos grupos mejoraron tras el postest, con una magnitud relativa mayor en el grupo Experimental: el grupo Control pasó de 3.914 (DE=0.296) a 4.063 (DE=0.388) (+3.8%), mientras que el grupo Experimental aumentó de 3.946 (DE=0.324) a 4.163 (DE=0.289) (+5.5%).
+
+En conjunto, estos resultados descriptivos no permiten afirmar un efecto uniforme y consistente de la intervención sobre las cuatro dimensiones: mientras que Respeto y la puntuación global muestran una ventaja descriptiva a favor del grupo Experimental, Implicación exhibe el patrón contrario, y Atención y Confianza no muestran diferencias apreciables entre grupos. Estas diferencias descriptivas deben confirmarse mediante una prueba formal de interacción Grupo × Tiempo (por ejemplo, ANOVA mixto o modelo de efectos mixtos) antes de atribuir cualquier cambio específicamente al efecto de la intervención, dado que las magnitudes observadas se solapan considerablemente al considerar las desviaciones estándar de cada grupo.
+
+```{r grafica-perfiles, fig.cap="Perfiles de interacción Grupo × Tiempo para cada dimensión del ISS. Las barras de error representan ±1 EE.", fig.height=8}
+ggplot(resumen_pp, aes(x = Tiempo, y = M, colour = Grupo, group = Grupo)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = M - EE, ymax = M + EE), width = 0.1, linewidth = 0.8) +
+  facet_wrap(~ Dimension, ncol = 3) +
+  scale_colour_manual(values = c(Control = "#E74C3C", Experimental = "#2980B9")) +
+  coord_cartesian(ylim = c(1, 5)) +
+  labs(title = "Perfiles de interacción Grupo x Tiempo",
+       subtitle = "Escala ISS — Dimensiones y puntuacion global",
+       x = NULL, y = "Media (+/- DS)", colour = "Grupo") +
+  theme_bw(base_size = 12) +
+  theme(legend.position = "bottom",
+        plot.title = element_text(face = "bold"),
+        strip.text = element_text(face = "bold"),
+        strip.background = element_rect(fill = "#ECF0F1"))
+```
+
+El gráfico de perfiles Grupo x Tiempo permite visualizar el patrón de cambio en cada dimensión. Únicamente en Respeto se observa una divergencia clara entre grupos: mientras el grupo Control mantuvo una media estable entre momentos (M=3.705 en ambos), el grupo Experimental mostró un incremento sostenido (de 3.668 a 3.913), sugiriendo un posible efecto específico de la intervención en esta dimensión. En las restantes dimensiones (Atención, Implicación, Confianza) y en la puntuación global, las trayectorias de ambos grupos resultaron prácticamente paralelas, lo que es más compatible con un efecto general de tiempo (familiarización con el instrumento o maduración) que con un efecto diferencial atribuible a la intervención. Esta interpretación visual debe confirmarse mediante una prueba formal de interacción Grupo × Tiempo antes de establecer conclusiones definitivas sobre la efectividad diferencial del programa.
+
+```{r funciones-cuanti, include=FALSE}
+variables_iss <- c(dims_validas, "ISS_Global")
+grupo_43 <- factor(pre_pareado$Var_Grupo, levels = c("Control", "Experimental"))
+
+f3 <- function(x) sprintf("%.3f", x)
+fp <- function(p) ifelse(p < .001, "<.001", sprintf("%.3f", p))
+
+# Tamaño de efecto r para pruebas de Wilcoxon / Mann-Whitney a partir del p bilateral
+r_efecto <- function(p, n) abs(qnorm(p / 2)) / sqrt(n)
+```
+
+## Equivalencia inicial de los grupos
+
+Antes de comparar los cambios entre grupos, se verificó que ambos partieran de niveles similares de sensibilidad intercultural. Para ello se compararon las puntuaciones del Pretest de los 43 estudiantes con Postest mediante la prueba U de Mann-Whitney.
+
+```{r equivalencia}
+bind_rows(lapply(variables_iss, function(v) {
+  control <- pre_pareado[[v]][grupo_43 == "Control"]
+  experimental <- pre_pareado[[v]][grupo_43 == "Experimental"]
+  prueba <- wilcox.test(control, experimental, exact = FALSE)
+  tibble(Dimension = v, M_Control = f3(mean(control)), M_Experimental = f3(mean(experimental)),
+         U = unname(prueba$statistic), p = fp(prueba$p.value),
+         r = f3(r_efecto(prueba$p.value, length(control) + length(experimental))))
+})) %>%
+  knitr::kable(caption = "Equivalencia inicial de los grupos en el Pretest (U de Mann-Whitney)", align = "lrrrrr")
+```
+
+No se encontraron diferencias significativas entre los grupos en ninguna dimensión ni en la puntuación global (todas las $p>.47$; $r\leq.11$), por lo que ambos grupos eran equivalentes al inicio de la intervención y la comparación de sus cambios es legítima.
+
+Dado que los cinco estudiantes que no respondieron el Postest pertenecían al grupo Control, se examinó si esta pérdida pudo sesgar la comparación, contrastando su Pretest con el de los 15 estudiantes del grupo Control que sí completaron ambas aplicaciones.
+
+```{r perdida-participantes}
+control_pre <- pre %>% mutate(Respondio_postest = con_postest) %>% filter(Var_Grupo == "Control")
+bind_rows(lapply(variables_iss, function(v) {
+  sin_post <- control_pre[[v]][!control_pre$Respondio_postest]
+  con_post <- control_pre[[v]][control_pre$Respondio_postest]
+  tibble(Dimension = v, `M sin postest (n=5)` = f3(mean(sin_post)), `M con postest (n=15)` = f3(mean(con_post)),
+         p = fp(wilcox.test(sin_post, con_post, exact = FALSE)$p.value))
+})) %>%
+  knitr::kable(caption = "Pretest del grupo Control según hayan respondido o no el Postest (U de Mann-Whitney)",
+               align = "lrrr")
+```
+
+Los estudiantes que abandonaron el estudio no difirieron de quienes lo completaron (todas las $p>.16$), por lo que no hay indicios de que la pérdida de participantes haya sesgado la composición del grupo Control.
+
+## Efecto de la intervención: interacción Grupo × Tiempo
+
+Para evaluar si el grupo Experimental cambió más que el grupo Control, se aplicaron tres aproximaciones complementarias: (a) un análisis de covarianza (ANCOVA) sobre el Postest controlando por el Pretest, recomendado para diseños pretest-postest por su mayor potencia estadística; (b) un modelo lineal mixto con efectos fijos de Tiempo, Grupo y su interacción y un intercepto aleatorio por estudiante, que permite incluir a los 48 participantes, incluidos los cinco sin Postest; y (c) como alternativa robusta ante la falta de normalidad de algunas dimensiones, la comparación de las ganancias (Postest − Pretest) entre grupos mediante la prueba U de Mann-Whitney.
+
+```{r interaccion}
+# Datos en formato largo para el modelo mixto (n = 48; cada estudiante se identifica por su fila)
+datos_largos <- bind_rows(
+  pre %>% mutate(Estudiante = row_number(), Tiempo = "Pretest"),
+  post %>% mutate(Estudiante = which(con_postest), Tiempo = "Postest")
+) %>%
+  select(Estudiante, Tiempo, all_of(variables_iss)) %>%
+  left_join(pre %>% transmute(Estudiante = row_number(), Grupo = Var_Grupo), by = "Estudiante") %>%
+  mutate(Tiempo = factor(Tiempo, levels = c("Pretest", "Postest")),
+         Grupo = factor(Grupo, levels = c("Control", "Experimental")))
+
+bind_rows(lapply(variables_iss, function(v) {
+  # (a) ANCOVA: efecto de Grupo sobre el Postest ajustado por el Pretest
+  datos <- tibble(postest = post[[v]], pretest = pre_pareado[[v]], Grupo = grupo_43)
+  modelo <- lm(postest ~ pretest + Grupo, data = datos)
+  comparacion <- anova(lm(postest ~ pretest, data = datos), modelo)
+  ss_grupo <- comparacion$`Sum of Sq`[2]
+  # (b) Modelo mixto: término de interacción Tiempo x Grupo
+  mixto <- nlme::lme(as.formula(paste(v, "~ Tiempo * Grupo")), random = ~ 1 | Estudiante, data = datos_largos)
+  interaccion <- summary(mixto)$tTable["TiempoPostest:GrupoExperimental", ]
+  # (c) Ganancias comparadas entre grupos
+  ganancia <- post[[v]] - pre_pareado[[v]]
+  tibble(Dimension = v,
+         `ANCOVA: dif. ajustada` = f3(coef(modelo)["GrupoExperimental"]),
+         `ANCOVA: F` = sprintf("%.2f", comparacion$F[2]),
+         `ANCOVA: p` = fp(comparacion$`Pr(>F)`[2]),
+         `η²p` = f3(ss_grupo / (ss_grupo + sum(resid(modelo)^2))),
+         `Mixto: interacción` = f3(interaccion["Value"]),
+         `Mixto: p` = fp(interaccion["p-value"]),
+         `Ganancias: p` = fp(wilcox.test(ganancia[grupo_43 == "Experimental"], ganancia[grupo_43 == "Control"],
+                                         exact = FALSE)$p.value))
+})) %>%
+  knitr::kable(caption = "Efecto de la intervención: ANCOVA (n=43), modelo mixto (n=48) y comparación de ganancias (n=43)",
+               align = "lrrrrrrr")
+```
+
+Ninguna de las tres aproximaciones detectó un efecto diferencial significativo de la intervención: el grupo Experimental no cambió significativamente más que el grupo Control en ninguna dimensión ni en la puntuación global. Respeto fue la única dimensión en la que las tres pruebas coincidieron en señalar una ventaja del grupo Experimental (diferencia ajustada = 0.219, $\eta^2_p=.048$; interacción en el modelo mixto = 0.258), de magnitud pequeña a moderada, aunque sin alcanzar significancia estadística (ANCOVA $p=.163$; modelo mixto $p=.125$; ganancias $p=.385$). Por tanto, la divergencia observada en Respeto en el gráfico de perfiles debe interpretarse como una tendencia y no como un efecto demostrado.
+
+El modelo mixto mostró, además, un efecto principal del Tiempo en Confianza ($b=0.427$, $p=.015$), indicando que ambos grupos incrementaron su seguridad en la interacción intercultural en una magnitud similar. Debe considerarse que, con grupos de 15 y 28 estudiantes, el estudio solo dispone de potencia suficiente (80%) para detectar diferencias grandes entre grupos ($d\approx0.9$), de modo que efectos de la magnitud observada en Respeto requerirían muestras considerablemente mayores para ser confirmados.
+
+Finalmente, se verificaron los supuestos del ANCOVA: (a) la homogeneidad de las pendientes de regresión, mediante el término de interacción Pretest × Grupo; (b) la normalidad de los residuos, con la prueba de Shapiro-Wilk; y (c) la homogeneidad de varianzas entre grupos, con la prueba de Levene (basada en la mediana). Además, dado que algunas dimensiones no cumplen el supuesto de normalidad, el efecto de Grupo se estimó también con errores estándar robustos HC3 (@longervin2000) y mediante una prueba de permutación con 9 999 permutaciones de las etiquetas de grupo, que conserva el par Pretest-Postest de cada estudiante y no requiere normalidad.
+
+```{r supuestos-ancova}
+# Errores estándar robustos HC3
+ee_hc3 <- function(modelo) {
+  X <- model.matrix(modelo)
+  e <- resid(modelo)
+  h <- hatvalues(modelo)
+  pan <- solve(crossprod(X))
+  sqrt(diag(pan %*% crossprod(X * (e / (1 - h))) %*% pan))
+}
+
+set.seed(123)
+n_permutaciones <- 9999
+bind_rows(lapply(variables_iss, function(v) {
+  datos <- data.frame(postest = post[[v]], pretest = pre_pareado[[v]], Grupo = grupo_43)
+  solo_pretest <- lm(postest ~ pretest, data = datos)
+  modelo <- lm(postest ~ pretest + Grupo, data = datos)
+  # (a) Homogeneidad de pendientes
+  pendientes <- anova(modelo, lm(postest ~ pretest * Grupo, data = datos))
+  # (b) Normalidad y (c) homogeneidad de varianzas de los residuos
+  residuos <- resid(modelo)
+  levene <- anova(lm(abs(residuos - ave(residuos, datos$Grupo, FUN = median)) ~ datos$Grupo))
+  # Efecto de Grupo con errores estándar robustos HC3
+  b <- coef(modelo)["GrupoExperimental"]
+  p_hc3 <- 2 * pt(abs(b / ee_hc3(modelo)["GrupoExperimental"]), df.residual(modelo), lower.tail = FALSE)
+  # Efecto de Grupo por permutación de las etiquetas de grupo
+  F_observado <- anova(solo_pretest, modelo)$F[2]
+  F_permutado <- replicate(n_permutaciones, {
+    datos$Grupo_perm <- sample(datos$Grupo)
+    anova(solo_pretest, lm(postest ~ pretest + Grupo_perm, data = datos))$F[2]
+  })
+  tibble(Dimension = v,
+         `Pendientes: p` = fp(pendientes$`Pr(>F)`[2]),
+         `Shapiro-Wilk: p` = fp(shapiro.test(residuos)$p.value),
+         `Levene: p` = fp(levene$`Pr(>F)`[1]),
+         `Dif. ajustada` = f3(b),
+         `p clásico` = fp(anova(solo_pretest, modelo)$`Pr(>F)`[2]),
+         `p robusto (HC3)` = fp(p_hc3),
+         `p permutación` = fp((sum(F_permutado >= F_observado) + 1) / (n_permutaciones + 1)))
+})) %>%
+  knitr::kable(caption = "Supuestos del ANCOVA y estimaciones robustas del efecto de Grupo (n=43)",
+               align = "lrrrrrrr")
+```
+
+No se encontraron diferencias significativas entre las pendientes de regresión de ambos grupos en ninguna dimensión (todas las $p>.12$), y las varianzas residuales fueron homogéneas (todas las $p>.14$), por lo que el ANCOVA resulta apropiado para estos datos. El supuesto de normalidad de los residuos no se cumplió en Respeto ni en Implicación ($p=.004$ en ambas), coherente con el efecto techo y el caso atípico identificados en el Capítulo \@ref(validacion). No obstante, las estimaciones robustas condujeron a las mismas conclusiones que el ANCOVA clásico: en Respeto, la prueba de permutación ($p=.165$) reprodujo prácticamente el valor clásico ($p=.163$) y la estimación con errores robustos fue aún más conservadora ($p=.250$). En consecuencia, la ausencia de un efecto diferencial significativo de la intervención no obedece a la violación de supuestos.
+
+## Cambio dentro de cada grupo
+
+Para describir la magnitud del cambio en cada grupo, se compararon el Pretest y el Postest mediante la prueba de Wilcoxon para muestras pareadas en Atención, Respeto, Implicación y la puntuación global, y mediante la prueba t de Student pareada en Confianza, la única dimensión que cumplió el supuesto de normalidad en ambas mediciones. Los valores p se ajustaron por comparaciones múltiples dentro de cada grupo con el método de Holm.
+
+```{r cambio-intragrupo}
+bind_rows(lapply(levels(grupo_43), function(g) {
+  en_grupo <- grupo_43 == g
+  bind_rows(lapply(variables_iss, function(v) {
+    antes <- pre_pareado[[v]][en_grupo]
+    despues <- post[[v]][en_grupo]
+    diferencia <- despues - antes
+    if (v == "D4_Confianza") {
+      prueba <- t.test(despues, antes, paired = TRUE)
+      efecto <- sprintf("dz = %.2f", mean(diferencia) / sd(diferencia))
+    } else {
+      prueba <- wilcox.test(despues, antes, paired = TRUE, exact = FALSE)
+      efecto <- sprintf("r = %.2f", r_efecto(prueba$p.value, sum(diferencia != 0)))
+    }
+    tibble(Grupo = g, Dimension = v, Pretest = f3(mean(antes)), Postest = f3(mean(despues)),
+           Cambio = f3(mean(diferencia)), p = prueba$p.value, Efecto = efecto)
+  })) %>%
+    mutate(p_Holm = fp(p.adjust(p, method = "holm")), p = fp(p))
+})) %>%
+  knitr::kable(caption = "Cambio Pretest-Postest dentro de cada grupo (Wilcoxon pareado; t pareada en Confianza)",
+               align = "llrrrrlr", format = "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE) %>%
+  collapse_rows(columns = 1, valign = "middle")
+```
+
+El grupo Experimental mostró mejoras significativas tras el ajuste de Holm en Respeto ($+0.245$; $p=.039$; $r=.48$), Confianza ($+0.393$; $p=.008$; $d_z=.65$) y la puntuación global ($+0.218$; $p=.002$; $r=.69$), mientras que el grupo Control no presentó cambios significativos tras el ajuste, aunque mostró tendencias de mejora en Implicación, Confianza y la puntuación global. Sin embargo, estos resultados deben leerse junto con los de la sección anterior: que un grupo alcance significancia y el otro no, no implica que ambos difieran entre sí. En Confianza, por ejemplo, el cambio fue prácticamente idéntico en los dos grupos ($+0.383$ y $+0.393$), y la menor significancia del Control obedece principalmente a su menor tamaño. La excepción es Respeto, donde el grupo Control no registró cambio alguno ($0.000$) frente a la mejora del grupo Experimental, lo que es coherente con la tendencia descrita anteriormente.
+
+## Transición entre perfiles de sensibilidad intercultural
+
+Dado que las filas de ambas aplicaciones corresponden al mismo estudiante, fue posible examinar si cada participante cambió de perfil entre el Pretest y el Postest, y si estas transiciones difirieron entre grupos. Los perfiles corresponden a la solución de dos clusters obtenida en cada fase (Capítulo \@ref(validacion)), identificados por su denominación sustantiva.
+
+```{r transicion-perfiles}
+# Etiqueta sustantiva del perfil: "Alta" para el cluster con mayor ISS global en cada fase
+etiquetar_perfil <- function(datos, perfil) {
+  medias <- tapply(datos$ISS_Global, perfil, mean)
+  factor(ifelse(perfil == which.max(medias), "Alta", "Baja"), levels = c("Baja", "Alta"))
+}
+transicion <- tibble(Grupo = grupo_43,
+                     Pretest = etiquetar_perfil(pre, perfiles_pre)[con_postest],
+                     Postest = etiquetar_perfil(post, perfiles_post))
+
+bind_rows(lapply(levels(grupo_43), function(g) {
+  tabla <- with(filter(transicion, Grupo == g), table(Pretest, Postest))
+  mejora <- tabla["Baja", "Alta"]
+  retroceso <- tabla["Alta", "Baja"]
+  tibble(Grupo = g, n = sum(tabla), `Baja → Baja` = tabla["Baja", "Baja"], `Baja → Alta` = mejora,
+         `Alta → Baja` = retroceso, `Alta → Alta` = tabla["Alta", "Alta"],
+         `McNemar exacto (p)` = fp(binom.test(mejora, mejora + retroceso)$p.value))
+})) %>%
+  knitr::kable(caption = "Transición de perfiles entre Pretest y Postest por grupo", align = "lrrrrrr")
+```
+
+La mayoría de los estudiantes se mantuvo en su perfil inicial en ambos grupos (12 de 15 en el Control y 21 de 28 en el Experimental). Los cambios ocurrieron en ambas direcciones: en el grupo Control, dos estudiantes pasaron de Baja a Alta Sensibilidad y uno retrocedió, y en el grupo Experimental cuatro mejoraron de perfil y tres retrocedieron, con un balance neto de un estudiante en cada grupo. Ninguno de estos cambios fue significativo (McNemar exacto, $p=1.00$ en ambos grupos), y la proporción de estudiantes que partieron de Baja Sensibilidad y alcanzaron el perfil de Alta Sensibilidad tampoco difirió entre grupos (2 de 6 en el Control frente a 4 de 9 en el Experimental). En consecuencia, el aumento agregado de la proporción de estudiantes con Alta Sensibilidad descrito en el Capítulo \@ref(validacion) no puede atribuirse a la intervención, sino a movimientos individuales en ambos sentidos presentes en los dos grupos.

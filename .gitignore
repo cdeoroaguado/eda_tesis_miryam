@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+*_cache/
+_bookdown_files/
+bookdown-demo.Rmd
+
+# Base de datos con nombres de estudiantes: no publicar
+datos/
+revision/
+bookdown-demo_files/

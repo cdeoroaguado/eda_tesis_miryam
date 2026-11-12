@@ -1,0 +1,29 @@
+# Operacionalización de las variables {#operacionalizacion}
+
+## Variables sociodemográficas
+
+Las variables sociodemográficas permiten caracterizar a los futuros profesores de inglés y explorar posibles asociaciones entre sus características personales/contextuales y los niveles de sensibilidad intercultural y competencia simbólica.
+
+```{r oper2, echo=FALSE}
+tab <- read.csv("tablas/oper2.csv", check.names = FALSE, colClasses = "character", encoding = "UTF-8")
+knitr::kable(tab, caption = "Variables Sociodemográficas", align = "lll", format = "html") |>
+  kableExtra::kable_styling(full_width = FALSE)
+```
+
+## Sensibilidad Intercultural (CUANT)
+
+La tabla completa de operacionalización de los 24 ítems de la Escala de Sensibilidad Intercultural (ISS)
+
+```{r oper3, echo=FALSE}
+tab <- read.csv("tablas/oper3.csv", check.names = FALSE, colClasses = "character", encoding = "UTF-8")
+knitr::kable(tab, caption = "Operacionalización de los 24 ítems de la Escala de Sensibilidad Intercultural (ISS)", align = "rlll", format = "html") |>
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+La sensibilidad intercultural se entiende como la disposición afectiva, cognitiva y comportamental que facilita interacciones efectivas y positivas con personas de otras culturas. Se mide mediante la Escala de Sensibilidad Intercultural (ISS) de Chen & Starosta, versión en español de Ruiz Bernardo (2012).
+
+```{r oper4, echo=FALSE}
+tab <- read.csv("tablas/oper4.csv", check.names = FALSE, colClasses = "character", encoding = "UTF-8")
+knitr::kable(tab, caption = "Operacionalización de la Sensibilidad Intercultural", align = "llll", format = "html") |>
+  kableExtra::kable_styling(full_width = FALSE)
+```

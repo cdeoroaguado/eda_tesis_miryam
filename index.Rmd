@@ -1,0 +1,118 @@
+---
+title: "Analisis de datos de sensibilidad intercultural"
+author: "Carlos de Oro Aguado"
+date: "2026-09-05"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [references.bib]
+link-citations: yes
+lang: es
+description: "En este documento realizaremos el analisis exploratorio de los datos y sus respectiva parte inferencial de la sensibilidad intercultural"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(kableExtra)
+library(psych)
+library(cluster)
+library(factoextra)
+library(vegan)
+```
+
+```{r datos, include=FALSE}
+archivo_datos <- "datos/ESCALA DE SENSIBILIDAD DATA 1 Y DATA 2.xlsx"
+
+# Hoja "data": pretest con variables sociodemográficas; hoja "data 2": postest.
+# Las filas de ambas hojas corresponden al mismo estudiante.
+pretest <- read_excel(archivo_datos, sheet = "data") %>%
+  mutate(Q3 = recode(Q3, "Mas de 22 años" = "Más de 22 años"),
+         Lugar = coalesce(Q6a, Q6b))
+postest <- read_excel(archivo_datos, sheet = "data 2")
+
+items <- paste0("P", 1:24)
+
+# Ítems redactados en sentido inverso (Ruiz Bernardo, 2012)
+items_invertidos <- paste0("P", c(2, 4, 10, 13, 15, 18, 20, 22))
+
+dimensiones <- list(
+  D1_Atencion    = paste0("P", c(9, 12, 13, 14, 17, 19, 21)),
+  D2_Respeto     = paste0("P", c(2, 4, 8, 10, 18, 20, 22)),
+  D3_Implicacion = paste0("P", c(1, 16, 24)),
+  D4_Confianza   = paste0("P", c(3, 6, 7, 11)),
+  D5_Disfrute    = paste0("P", c(5, 15, 23))
+)
+dims_validas <- names(dimensiones)[1:4]
+
+recodificar <- function(d) mutate(d, across(all_of(items_invertidos), ~ 6 - .x))
+
+# Puntaje por dimensión (media de sus ítems) e ISS global (media de los 21 ítems de D1-D4)
+puntuar <- function(d) {
+  for (dim in names(dimensiones)) d[[dim]] <- rowMeans(d[dimensiones[[dim]]])
+  d$ISS_Global <- rowMeans(d[unlist(dimensiones[dims_validas])])
+  d
+}
+
+pretest_recoded <- recodificar(pretest)
+pre <- puntuar(pretest_recoded)
+
+# Postest: solo estudiantes que respondieron (n = 43)
+con_postest <- complete.cases(postest[items])
+post <- puntuar(recodificar(postest[con_postest, ]))
+pre_pareado <- pre[con_postest, ]
+
+# Escalado por rango (0-1) usado en el análisis de clúster
+escalar_rango <- function(x) (x - min(x)) / (max(x) - min(x))
+
+# Tabla de frecuencias: `variables` es un vector etiqueta = columna;
+# `niveles` fija el orden de las categorías de cada etiqueta.
+frecuencias <- function(d, variables, niveles = list()) {
+  bind_rows(lapply(names(variables), function(etiqueta) {
+    x <- d[[variables[[etiqueta]]]]
+    orden <- niveles[[etiqueta]]
+    if (is.null(orden)) orden <- names(sort(table(x), decreasing = TRUE))
+    tibble(Variable = etiqueta, Categoria = factor(x, levels = orden)) %>%
+      count(Variable, Categoria)
+  })) %>%
+    mutate(porcentaje = 100 * n / nrow(d))
+}
+
+tabla_frecuencias <- function(tab, caption, categoria = "Categoria") {
+  tab %>%
+    mutate(porcentaje = sprintf("%.2f", porcentaje)) %>%
+    rename(!!categoria := Categoria, !!paste("n =", nrow(pre)) := n) %>%
+    knitr::kable(caption = caption, align = "llcc", format = "html") %>%
+    kable_styling(full_width = FALSE)
+}
+
+grafico_frecuencias <- function(tab, orden_paneles, xlab) {
+  tab %>%
+    mutate(Variable = factor(Variable, levels = orden_paneles),
+           fila = factor(paste(Variable, Categoria, sep = "___"),
+                         levels = rev(paste(Variable, Categoria, sep = "___")))) %>%
+    ggplot(aes(x = n, y = fila)) +
+    geom_col() +
+    geom_text(aes(label = sprintf("%d (%.2f%%)", n, porcentaje)), hjust = -0.05, size = 3) +
+    facet_wrap(~ Variable, ncol = 1, scales = "free_y") +
+    scale_y_discrete(labels = function(x) sub(".*___", "", x)) +
+    expand_limits(x = max(tab$n) * 1.15) +
+    labs(x = xlab, y = NULL) +
+    theme_bw()
+}
+```
+
+# Contexto del problema
+
+El estudio se centra en comprender la influencia que tiene la telecolaboración en el desarrollo de la sensibilidad intercultural y la competencia simbólica en futuros profesores de inglés. En los programas de formación docente en lenguas extranjeras, la capacidad de interactuar de manera efectiva y crítica con personas de diferentes culturas es fundamental. Sin embargo, aún existen vacíos en la comprensión de cómo experiencias pedagógicas mediadas por tecnología, como los proyectos telecolaborativos, contribuyen al desarrollo de estas competencias.
+
+La sensibilidad intercultural, entendida como la disposición afectiva, cognitiva y conductual para interactuar positivamente con individuos de otras culturas, puede ser medida mediante instrumentos estandarizados como la Intercultural Sensitivity Scale (ISS). Por su parte, la competencia simbólica implica la habilidad de negociar significados, interpretar prácticas culturales, posicionarse críticamente y actuar con agencia en contextos interculturales. A diferencia de la sensibilidad intercultural, la competencia simbólica se evidencia principalmente a través de interacciones, discursos, reflexiones y comportamientos observables.
+
+En este contexto, los proyectos telecolaborativos ofrecen un espacio auténtico para la interacción intercultural entre estudiantes de diferentes países, permitiéndoles negociar significados, enfrentar ambigüedades y reflexionar sobre su propia identidad cultural y comunicativa. Estos entornos virtuales se convierten así en un laboratorio sociocultural donde emergen procesos claves para el desarrollo de la sensibilidad intercultural y la competencia simbólica.
+
+A pesar de su potencial, existe la necesidad de evaluar empíricamente hasta qué punto estas experiencias telecolaborativas producen cambios medibles en la sensibilidad intercultural y cómo estos cambios se relacionan o son explicados por las manifestaciones cualitativas de la competencia simbólica. Por ello, este estudio adopta un enfoque mixto que integra datos cuantitativos (pre-test y post-test mediante la ISS) y cualitativos (entrevistas, diarios de aprendizaje, observaciones y evidencias interaccionales), con el fin de ofrecer una comprensión más completa y profunda del fenómeno.
+
+En suma, el presente trabajo aborda un problema relevante tanto para la formación de docentes de lenguas como para el campo de la comunicación intercultural: determinar en qué medida la telecolaboración contribuye al desarrollo integral de habilidades interculturales en futuros profesores de inglés, y cómo estos aprendizajes se articulan desde una perspectiva mixta que reconoce la complementariedad entre lo cuantitativo y lo cualitativo.

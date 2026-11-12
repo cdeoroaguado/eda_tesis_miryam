@@ -1,0 +1,16 @@
+book_filename: "bookdown-demo"
+output_dir: docs
+delete_merged_file: true
+rmd_files:
+  - index.Rmd
+  - 01-operacionalizacion.Rmd
+  - 02-eda.Rmd
+  - 03-validacion.Rmd
+  - 04-cuanti.Rmd
+  - 05-referencias.Rmd
+language:
+  label:
+    fig: "Figura "
+    tab: "Tabla "
+  ui:
+    chapter_name: "Capítulo "

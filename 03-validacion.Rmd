@@ -1,0 +1,405 @@
+# Validación del instrumento {#validacion}
+
+```{r funciones-validacion, include=FALSE}
+f3 <- function(x) sprintf("%.3f", x)
+f4 <- function(x) sprintf("%.4f", x)
+
+# Descriptivos y Shapiro-Wilk por dimensión (D1-D4)
+descriptivos_dim <- function(d, con_n = FALSE) {
+  tab <- d %>%
+    select(all_of(dims_validas)) %>%
+    pivot_longer(everything(), names_to = "Dimension") %>%
+    group_by(Dimension) %>%
+    summarise(N = n(), Media = f3(mean(value)), DE = f3(sd(value)), Mediana = f3(median(value)),
+              Min = f3(min(value)), Max = f3(max(value)), P_Normalidad = f4(shapiro.test(value)$p.value))
+  if (!con_n) tab <- select(tab, -N)
+  tab
+}
+
+# Descriptivos de cada dimensión por perfil
+descriptivos_perfil <- function(d, perfil) {
+  d %>%
+    mutate(Perfil = perfil) %>%
+    select(Perfil, all_of(dims_validas)) %>%
+    pivot_longer(-Perfil, names_to = "Dimension") %>%
+    group_by(Dimension, Perfil) %>%
+    summarise(n = n(), Media = f3(mean(value)), DE = f3(sd(value)), Mediana = f3(median(value)),
+              Min = f3(min(value)), Max = f3(max(value)), .groups = "drop")
+}
+
+normalidad_perfil <- function(d, perfil) {
+  d %>%
+    mutate(Perfil = perfil) %>%
+    select(Perfil, all_of(dims_validas)) %>%
+    pivot_longer(-Perfil, names_to = "Dimension") %>%
+    group_by(Dimension, Perfil) %>%
+    summarise(n = n(), p = shapiro.test(value)$p.value, .groups = "drop") %>%
+    mutate(p_val_shapiro = f4(p), Asuncion_Normalidad = ifelse(p < 0.05, "NO Cumple", "Cumple")) %>%
+    select(-p)
+}
+
+# Estudiantes de un perfil ordenados por ISS global (Índice = posición dentro del perfil)
+estudiantes_perfil <- function(d, perfil, k) {
+  d %>%
+    filter(perfil == k) %>%
+    mutate(`Índice` = row_number()) %>%
+    arrange(ISS_Global) %>%
+    transmute(`Índice`, ID, Grupo = Var_Grupo, `ISS Global` = sprintf("%.6f", ISS_Global))
+}
+
+# Suma de cuadrados intra-cluster al cortar el dendrograma en k grupos
+wss_dendrograma <- function(datos, hc, ks = 2:8) {
+  sapply(ks, function(k) {
+    grupos <- cutree(hc, k)
+    sum(sapply(split(datos, grupos), function(g) sum(scale(g, scale = FALSE)^2)))
+  })
+}
+
+# Silueta promedio (k = 1..10) con el estilo de factoextra, incluyendo k = 1 (= 0)
+grafico_silueta <- function(datos) {
+  p <- fviz_nbclust(datos, hcut, method = "silhouette", hc_method = "ward.D2")
+  con_k1 <- function(d) {
+    d <- rbind(data.frame(clusters = "1", y = 0), d)
+    d$clusters <- factor(d$clusters, levels = as.character(1:10))
+    d
+  }
+  p$data <- con_k1(p$data)
+  for (i in seq_along(p$layers)) {
+    if (inherits(p$layers[[i]]$geom, "GeomVline")) {
+      p$layers[[i]]$data$xintercept <- p$layers[[i]]$data$xintercept + 1
+    } else {
+      p$layers[[i]]$data <- con_k1(p$layers[[i]]$data)
+    }
+  }
+  p
+}
+
+# Dendrograma con trazo grueso y leyenda "lwd", como en la versión original del documento
+grafico_dendrograma <- function(hc, titulo) {
+  p <- fviz_dend(hc, k = 2, rect = TRUE, main = titulo)
+  for (i in seq_along(p$layers)) {
+    if (inherits(p$layers[[i]]$geom, "GeomSegment")) p$layers[[i]]$show.legend <- TRUE
+  }
+  p +
+    scale_linewidth_continuous(name = "lwd") +
+    guides(colour = "none", linetype = "none", linewidth = guide_legend()) +
+    theme(legend.position = "right")
+}
+
+grafico_codo <- function(wss, titulo, ks = 2:8) {
+  plot(ks, wss, type = "b", pch = 19, main = titulo,
+       xlab = "Número de clusters (k)", ylab = "Suma de cuadrados intra-cluster (WSS)")
+}
+```
+
+Para el procesamiento de la información se utilizó el software estadístico R version 4.5.1 (2025-06-13 ucrt). El análisis se estructuró en tres fases consecutivas para garantizar la validez de las inferencias derivadas del experimento.
+
+## Preparación y limpieza de la identidad escalar
+
+Dado que la Escala de Sensibilidad Intercultural (ISS) contiene ítems redactados en sentido inverso (donde una puntuación alta indica una baja sensibilidad), se procedió a la recodificación de los ítems P2, P4, P10, P13, P15, P18, P20 y P22. Los itmes invertidos son básados de la literatura de Bernardo Ruiz, 2012. Esta transformación es un requisito técnico indispensable para asegurar que todas las variables apunten en la misma dirección teórica antes de calcular promedios dimensionales.
+
+## Validación psicométrica de la muestra
+
+A diferencia de una aplicación estándar, y siguiendo las recomendaciones de Ruiz Bernardo (2012), se evaluó la consistencia interna del instrumento específicamente en la muestra de estudio utilizando el coeficiente Alfa de Cronbach. Esta validación se realizó sobre los datos obtenidos en la fase de Pretest, funcionando como línea base para confirmar que la estructura de cinco dimensiones propuesta por la literatura es fiable para la población objeto de estudio.
+
+```{r resumenalpha}
+alfa_global <- psych::alpha(pretest_recoded[items], check.keys = FALSE, warnings = FALSE)$total
+tibble(
+  `Métrica` = c("Alfa de Cronbach", "Alfa estandarizado", "G6 (smc)", "Correlación promedio (average_r)",
+                "Relación señal/ruido (S/N)", "Error estándar (ase)", "Media", "Desviación estándar",
+                "Mediana de correlaciones"),
+  Valor = f3(unlist(alfa_global[c("raw_alpha", "std.alpha", "G6(smc)", "average_r", "S/N", "ase",
+                                  "mean", "sd", "median_r")]))
+) %>%
+  knitr::kable(caption = "Estadísticos completos de fiabilidad del instrumento global", align = "lr")
+```
+
+El coeficiente Alfa de Cronbach ($\alpha$) obtenido fue de .707. Este valor se sitúa por encima del umbral de .70 sugerido por la literatura psicométrica clásica (Nunnally & Bernstein, 1994), lo que certifica que el instrumento posee una fiabilidad aceptable para la investigación. Esto confirma que las 24 preguntas convergen de manera consistente en la medición del constructo de sensibilidad intercultural.
+
+Ademas, se observó un coeficiente G6 de Guttman (Lambda-6) de .887. Dado que este indicador es especialmente sensible a estructuras multidimensionales, su elevado valor sugiere una excelente consistencia interna en las dimensiones específicas del instrumento. Este resultado indica que las subdimensiones están bien definidas y son estables.
+
+Tambien, la correlación inter-ítem promedio ($r$ promedio) fue de .114. Si bien es un valor moderado, su magnitud es coherente con instrumentos que evalúan constructos complejos y amplios. La escala no es unidimensional; es decir, los ítems no son redundantes entre sí, sino que capturan distintas dimensiones de la sensibilidad intercultural, tal como se esperaba teóricamente.
+
+Ahora, veamos la confiabilidad por dimensión
+
+```{r alphadimension}
+# Respeto (D2): ajuste de polaridad definido por la investigadora para esta dimensión
+# (se invierten P2, P4, P8, P10, P20 y P22 sobre las respuestas originales).
+items_d2_ajuste <- paste0("P", c(2, 4, 8, 10, 20, 22))
+d2_ajustada <- mutate(pretest, across(all_of(items_d2_ajuste), ~ 6 - .x))
+
+datos_alfa <- list(
+  "D1: Atención"   = pretest_recoded[dimensiones$D1_Atencion],
+  "D2: Respeto"    = d2_ajustada[dimensiones$D2_Respeto],
+  "D3: Implicacón" = pretest_recoded[dimensiones$D3_Implicacion],
+  "D4: Confianza"  = pretest_recoded[dimensiones$D4_Confianza],
+  "D5: Disfrute"   = pretest_recoded[dimensiones$D5_Disfrute]
+)
+bind_rows(lapply(names(datos_alfa), function(dim) {
+  a <- psych::alpha(datos_alfa[[dim]], check.keys = FALSE, warnings = FALSE)$total
+  tibble(`Dimensión` = dim, raw_alpha = a$raw_alpha, std.alpha = a$std.alpha, G6_smc = a$`G6(smc)`,
+         average_r = a$average_r, S_N = a$`S/N`, ase = a$ase, mean = a$mean, sd = a$sd, median_r = a$median_r)
+})) %>%
+  mutate(across(-`Dimensión`, f3)) %>%
+  knitr::kable(caption = "Estadísticos completos de fiabilidad por dimensión", align = "lrrrrrrrrr")
+```
+
+```{r, echo=TRUE}
+# Diagnóstico de ítems de D5 antes de descartarla definitivamente
+alpha_d5 <- psych::alpha(pretest_recoded %>% select(P5, P15, P23))
+alpha_d5$item.stats  # correlación ítem-total corregida por ítem
+```
+
+```{r, echo=TRUE}
+alpha_d5$alpha.drop  # alfa si se elimina cada ítem
+```
+
+Las dimensiones de Atención (D1: $\alpha= .610$) y Confianza (D4: $\alpha =  .707$) presentaron niveles de consistencia satisfactorios para el análisis de subescalas. Por su parte, la dimensión de Respeto (D2) alcanzó un coeficiente de $\alpha= .521$ tras el ajuste de polaridad de los ítems invertidos, valor aceptable considerando que la recodificación de ítems suele introducir varianza sistemática que penaliza el Alfa de Cronbach sin afectar necesariamente la validez del constructo.
+
+Respecto a la dimensión de Implicación (D3: $\alpha=  .403$), aunque su coeficiente se ubica por debajo de los umbrales convencionales, este resultado debe interpretarse a la luz del reducido número de ítems que la componen ($n = 3$). @cortina1993 y @clarkwatson1995 advierten que el Alfa de Cronbach está matemáticamente condicionado por el número de reactivos, de modo que subescalas breves pueden subestimar la fiabilidad real incluso cuando sus ítems covarían de forma adecuada. Por ello se recurrió a la correlación inter-ítem promedio como criterio complementario @streiner2015: el valor obtenido ($r = .219$) se sitúa dentro del rango óptimo de .15 a .50 propuesto por @clarkwatson1995, lo que respalda la coherencia interna de la dimensión y justifica su retención en los análisis subsiguientes.
+
+La dimensión de Disfrute (D5: = .068), en cambio, no encuentra el mismo respaldo: pese a estar compuesta también por 3 ítems, su correlación inter-ítem promedio ($r = .038$) se ubica muy por debajo del umbral mínimo de $.15$, e incluso el mejor subconjunto posible de dos ítems no logra superarlo ($r = .100$ tras excluir P5). Dado que ambas dimensiones comparten el mismo número de reactivos, esta disparidad descarta que la longitud de la escala explique el bajo desempeño de D5; se trata, en cambio, de ausencia de covarianza sistemática entre sus ítems. En consecuencia, esta dimensión se excluye de los análisis dimensionales posteriores y se reporta como limitación del instrumento en la muestra estudiada.
+
+Finalmente, el robusto valor de G6 de Guttman global ($.887$), calculado sobre los 24 ítems, respalda que el instrumento en su conjunto posee una alta consistencia interna y constituye una herramienta válida para evaluar el impacto de la intervención, sin que ello subsane, por sí solo, la debilidad específica detectada en Disfrute.
+
+## Perfiles de sensibilidad intercultural con el pretest
+
+En lugar de utilizar los 21 ítems individuales de la escala (ISS), haremos la agrupación basándonos en las 4 dimensiones validadas anteriormente. Esta decisión se tomó porque el análisis por dimensiones es más efectivo, ofrece una mayor claridad en la definición de los perfiles y evita desechar un número excesivo de casos. La técnica principal que se empleará es el análisis de cluster de K-medias.
+
+- Inicialmente hagamos el análisis descriptivo por dimensión y verifiquemos la normalidad para cada dimensión
+
+```{r cluster}
+descriptivos_dim(pre) %>%
+  knitr::kable(caption = "Estadísticos descriptivos y prueba de normalidad por dimensión (Pretest, D1-D4)",
+               align = "lrrrrrr")
+```
+
+El análisis descriptivo evidenció medias elevadas en Atención (M=4.38, DE=.40) e Implicación (M=4.48, DE=.43), un nivel moderado en Respeto (M=3.69, DE=.35) y la mayor variabilidad en Confianza (M=3.20, DE=.70). La prueba de Shapiro-Wilk indicó desviaciones significativas de la normalidad en Atención (p=.042) e Implicación (p\<.001), coherente con un efecto techo observable en sus valores mínimos (3.14 y 3.33, respectivamente, con máximos en 5.00). Dado que la restricción de rango atenúa las estimaciones de fiabilidad al reducir la varianza disponible (@francomartinez2023), este hallazgo complementa la explicación previa del bajo alfa de Cronbach en Implicación, sumándose al efecto ya documentado del reducido número de ítems.
+
+Ahor, con $n = 48$, no podemos usar métodos que requieran grandes volúmenes de datos. El mejor procedimiento para muestras pequeñas no es el K-means tradicional (que es sensible a valores extremos), sino el Análisis de Clúster Jerárquico con el Método de Ward. Vizualicemos el dendograma
+
+```{r dendograma1}
+datos_cluster_pre <- as.data.frame(lapply(pre[dims_validas], escalar_rango))
+hc_pre <- hclust(dist(datos_cluster_pre, method = "euclidean"), method = "ward.D2")
+
+grafico_silueta(datos_cluster_pre) +
+  labs(title = "Número óptimo de clusters (método de la silueta)",
+       caption = "Nota: k=2 maximiza el ancho de silueta promedio (.297)")
+```
+
+Con el propósito de determinar el número óptimo de perfiles interculturales, se aplicó el criterio del ancho de silueta promedio (average silhouette width) sobre las cuatro dimensiones válidas del instrumento (Atención, Respeto, Implicación y Confianza), estandarizadas por rango. Los resultados mostraron un pico claro en k=2 (ancho de silueta promedio = .297), seguido de k=3 (.249), con una caída sostenida hasta un mínimo local en k=5--6 (≈.155) y un leve repunte hacia valores de k más altos, patrón que no debe interpretarse como evidencia de una solución alternativa válida.
+
+Siguiendo la heurística de interpretación propuesta por @kaufmanrousseeuw1990, según la cual valores entre .26 y .50 indican una estructura "débil o potencialmente artificial", el valor máximo obtenido (.297) se ubica apenas por encima de este umbral. Esto sugiere que, si bien existe una partición identificable en la muestra, la separación entre los perfiles interculturales no es marcada, sino más bien tenue --- un resultado esperable considerando el tamaño muestral reducido (n=48) y la restricción de varianza detectada previamente en Atención e Implicación por efecto techo. Con base en este criterio, se adoptó k=2 como solución final para la caracterización de perfiles.
+
+```{r dendograma4}
+grafico_codo(wss_dendrograma(datos_cluster_pre, hc_pre), "Método del codo sobre el dendrograma de Ward.D2")
+```
+
+Como criterio complementario, se calculó el método del codo (within-cluster sum of squares, WSS) sobre el mismo dendrograma de Ward.D2 utilizado en el análisis de silueta. La curva resultante mostró una disminución gradual y continua de la suma de cuadrados intra-cluster a medida que aumentaba el número de clusters, sin un punto de inflexión marcado que sugiriera un valor de k claramente superior a los demás. Esta ausencia de un codo definido es consistente con el bajo ancho de silueta obtenido previamente (máximo = .297 en k=2), y refuerza la interpretación de que la estructura subyacente de perfiles interculturales en la muestra corresponde a un continuo más que a agrupaciones marcadamente diferenciadas. Dado que el método del codo no aportó una señal alternativa competitiva frente al criterio de la silueta, se mantuvo k=2 como solución final para la caracterización de perfiles interculturales.
+
+```{r dendograma3}
+grafico_dendrograma(hc_pre, "Dendrograma de Perfiles Interculturales (Pretest, n=48)")
+```
+
+La solución final de dos clusters, respaldada por el criterio de la silueta (ancho promedio = .297) y por la ausencia de un codo definido en la curva de WSS, se representa en la Figura X. El dendrograma confirma la estructura jerárquica identificada previamente: los subgrupos que en la solución de k=3 se fusionaban a una altura considerablemente menor (\~1.5) que la que separaba al grupo principal (\~2.6) se integran aquí en un único clúster, evidenciando que la partición binaria refleja de forma más fiel la estructura subyacente de los datos que una tipología de tres perfiles. El clúster 1 (n=31) agrupa a la mayoría de los estudiantes de la muestra, mientras que el clúster 2 (n=17) constituye un grupo minoritario y más homogéneo, cuya caracterización en términos de las cuatro dimensiones interculturales se presenta a continuación.
+
+- Ahora, obtendremos los grupos por la caracterización de clusters
+
+```{r gruposdeperfiles}
+perfiles_pre <- cutree(hc_pre, k = 2)
+descriptivos_perfil(pre, perfiles_pre) %>%
+  knitr::kable(caption = "Comparación de perfiles por dimensión (k=2, Pretest)", align = "llrrrrrr")
+```
+
+El análisis comparativo de las dimensiones revela que el factor determinante en la distinción de los perfiles no radica en el Respeto ante las diferencias (D2), donde las puntuaciones se mantienen en un rango relativamente estrecho y favorable en ambos grupos ($\bar{x}_{P1}=3.52$, $DE=0.37$; $\bar{x}_{P2}=3.78$, $DE=0.30$). En cambio, la diferenciación más marcada emerge en la Confianza en la interacción (D4), cuya brecha entre perfiles (1.01 puntos) supera ampliamente la observada en cualquier otra dimensión.
+
+El Perfil 2 (n=31, Alta Sensibilidad Intercultural), que agrupa a la mayoría de la muestra, se distingue por puntuaciones elevadas y consistentes en las cuatro dimensiones: Atención ($\bar{x}=4.58$, $DE=0.26$), Implicación ($\bar{x}=4.61$, $DE=0.36$), Respeto ($\bar{x}=3.78$, $DE=0.30$) y, particularmente, una sólida autoconfianza comunicativa ($\bar{x}=3.56$, $DE=0.49$).
+
+Por el contrario, el Perfil 1 (n=17, Baja Sensibilidad Intercultural) presenta puntuaciones inferiores en las cuatro dimensiones, con la limitación más marcada precisamente en Confianza ($\bar{x}=2.54$, $DE=0.54$), siendo el único grupo cuya media se ubica por debajo del punto medio de la escala. Aunque este perfil mantiene niveles moderados de Implicación ($\bar{x}=4.24$, $DE=0.45$) y Atención ($\bar{x}=4.01$, $DE=0.34$), la brecha respecto al Perfil 2 es sustancialmente menor en Respeto que en Confianza, lo que sugiere que la principal limitación de este grupo no es actitudinal (el respeto hacia la diferencia cultural está presente en ambos perfiles) sino de índole socioemocional: una menor seguridad y autopercepción de eficacia en la interacción intercultural.
+
+Estos hallazgos sugieren que el respeto teórico hacia la diversidad no garantiza por sí solo una disposición segura a la acción intercultural. Por tanto, se justifica una intervención pedagógica que no se limite a la promoción de valores axiológicos, sino que se centre en el entrenamiento de habilidades socioemocionales para mitigar la ansiedad comunicativa y fortalecer la confianza del estudiante en contextos de interacción diversos.
+
+```{r vizcluster}
+fviz_cluster(list(data = datos_cluster_pre, cluster = perfiles_pre),
+             palette = "jco", ellipse.type = "convex", repel = TRUE, ggtheme = theme_bw(),
+             main = "Mapa de Perfiles de Sensibilidad Intercultural (Pretest, k=2, n=48)")
+```
+
+El mapa de clusters confirma la solución de dos perfiles previamente identificada mediante el criterio de la silueta (k=2). El Cluster 2 (n=31, en amarillo) agrupa a la mayoría de la muestra y ocupa la región derecha del plano factorial, mientras que el Cluster 1 (n=17, en azul) se ubica en la región izquierda, con una separación clara aunque no absoluta entre ambos grupos (algunos casos como el 40 y el 12 se sitúan cerca del límite entre clusters).
+
+- El Perfil 2 (Alta Sensibilidad Intercultural, n=31) presenta las puntuaciones más altas y equilibradas en las cuatro dimensiones de la escala: Atención ($\bar{x}=4.58$), Implicación ($\bar{x}=4.61$), Respeto ($\bar{x}=3.78$) y, de forma más marcada, Confianza ($\bar{x}=3.56$). Son estudiantes con una disposición activa, segura y consistente hacia el intercambio intercultural.
+
+- El Perfil 1 (Baja Sensibilidad Intercultural, n=17) es el único grupo cuya media se sitúa por debajo del punto medio de la escala, y esto ocurre específicamente en Confianza ($\bar{x}=2.54$) --- la brecha más amplia entre ambos perfiles (1.01 puntos). Aunque mantiene niveles moderados de Implicación ($\bar{x}=4.24$) y Atención ($\bar{x}=4.01$), y su Respeto ($\bar{x}=3.52$) no difiere drásticamente del otro grupo, la limitación distintiva de este perfil es de naturaleza socioemocional: una menor seguridad y autopercepción de eficacia comunicativa frente a la diversidad cultural, no una actitud de rechazo hacia ella.
+
+Estos hallazgos sugieren que el respeto hacia la diferencia cultural está presente en ambos perfiles casi por igual, y que la verdadera línea divisoria entre "alta" y "baja" sensibilidad intercultural en esta muestra pasa por la confianza y seguridad en la interacción, más que por la actitud valorativa hacia la diversidad.
+
+Veamos si hay comportamiento normal de los perfiles según cada dimension
+
+```{r normalmulti}
+normalidad_perfil(pre, perfiles_pre) %>%
+  knitr::kable(caption = "Verificación del supuesto de normalidad por dimensión y perfil (Pretest, k=2)",
+               align = "ccccc")
+```
+
+La verificación de normalidad por dimensión y perfil reveló que, si bien el Perfil 1 (Baja Sensibilidad) cumplió el supuesto de normalidad en las cuatro dimensiones evaluadas, el Perfil 2 (Alta Sensibilidad) presentó desviaciones significativas en Atención (p=.046) e Implicación (p=.001). Este hallazgo es consistente con el efecto techo documentado previamente en la muestra completa para estas dos dimensiones: al concentrar las puntuaciones más altas de la muestra (Atención $\bar{x}=4.58$; Implicación $\bar{x}=4.61$), el Perfil 2 exhibe una distribución comprimida contra el límite superior de la escala, lo que introduce asimetría negativa (@francomartinez2023).
+
+Como los perfiles en la dimensión voluntad no tiene comportamiento normal, por lo que procederemos a realizar un analisis de varianza permutacional (PERMANOVA), esto es, con el fin de verificar si los cluster son diferentes estadísticamente
+
+```{r permanova-pretest}
+data_final <- pre %>% mutate(Experimento = "Pretest", Perfil = factor(perfiles_pre))
+datos_permanova <- datos_cluster_pre
+
+set.seed(123)
+print("--- RESULTADO DE PERMANOVA (Pretest, k=2) ---")
+adonis2(datos_permanova ~ Perfil, data = data_final %>% filter(Experimento == "Pretest"),
+        permutations = 999, method = "euclidean")
+```
+
+Para confirmar la validez estadística de la consistencia de los dos perfiles, se realizó un análisis de PERMANOVA (@anderson2001) sobre las cuatro dimensiones estandarizadas por rango, utilizando distancia euclídea y 999 permutaciones. Los resultados evidenciaron diferencias significativas entre los centroides de los perfiles ($F_{1,46}=22.22$, $R^2=.326$, $p<.001$), indicando que la pertenencia al perfil explica el 32.6% de la variabilidad conjunta en las dimensiones de sensibilidad intercultural. Este resultado corrobora, con respaldo inferencial, la separación observada visualmente en el mapa de clusters y en el dendrograma jerárquico.
+
+Dado que el PERMANOVA es sensible a la heterogeneidad de las dispersiones entre grupos, en especial cuando sus tamaños están desbalanceados (@andersonwalsh2013), se verificó este supuesto mediante la prueba de homogeneidad de dispersiones multivariantes PERMDISP (@anderson2006), sobre las mismas dimensiones estandarizadas, con distancia euclídea y 999 permutaciones.
+
+```{r permdisp-pretest}
+dispersion_pre <- betadisper(dist(datos_permanova, method = "euclidean"), data_final$Perfil, type = "centroid")
+
+print("--- DISTANCIA PROMEDIO AL CENTROIDE (Pretest, k=2) ---")
+round(tapply(dispersion_pre$distances, data_final$Perfil, mean), 3)
+
+set.seed(123)
+print("--- RESULTADO DE PERMDISP (Pretest, k=2) ---")
+permutest(dispersion_pre, permutations = 999)
+```
+
+A diferencia del Postest, en el Pretest las dispersiones de los perfiles no fueron homogéneas ($F_{1,46}=4.74$, $p=.040$): el Perfil 1 (Baja Sensibilidad, n=17) presentó una dispersión mayor alrededor de su centroide (0.411) que el Perfil 2 (Alta Sensibilidad, n=31; 0.331). Puesto que el grupo de menor tamaño es también el más disperso —la combinación en la que el PERMANOVA tiende a ser más liberal (@andersonwalsh2013)—, el resultado anterior debe interpretarse con cautela: parte de la diferencia detectada refleja la mayor heterogeneidad del perfil de Baja Sensibilidad y no exclusivamente la distancia entre centroides. No obstante, la magnitud del efecto ($R^2=.326$) y la brecha de 1.01 puntos en Confianza entre perfiles indican que la diferencia de localización es real y sustantiva.
+
+## Estudiantes con sensibilidad intercultural pretest
+
+Aquí seleccionaremos los estudiantes que tienen baja sensibilidad intercultural
+
+```{r estbaj2}
+estudiantes_perfil(pre, perfiles_pre, 1) %>%
+  knitr::kable(caption = "Perfil 1 (Baja Sensibilidad): estudiantes ordenados por ISS_Global (Pretest)",
+               align = "rllr")
+```
+
+Aquí seleccionaremos los estudiantes que tienen alta sensibilidad intercultural
+
+```{r estmedia2}
+estudiantes_perfil(pre, perfiles_pre, 2) %>%
+  knitr::kable(caption = "Perfil 2 (Alta Sensibilidad): estudiantes ordenados por ISS_Global (Pretest)",
+               align = "rllr")
+```
+
+## Perfiles de sensibilidad intercultural con el postest
+
+En lugar de utilizar los 21 ítems individuales de la escala (ISS), haremos la agrupación basándonos en las 5 dimensiones usando el postest. La técnica principal que se empleará es el análisis de cluster de K-medias.
+
+- Inicialmente hagamos el análisis descriptivo por dimensión y verifiquemos la normalidad para cada dimensión
+
+```{r cluster20}
+descriptivos_dim(post, con_n = TRUE) %>%
+  knitr::kable(caption = "Estadísticos descriptivos y prueba de normalidad por dimensión (Postest, D1-D4)",
+               align = "lrrrrrrr")
+```
+
+El análisis descriptivo del Postest (n=43) mostró incrementos en las cuatro dimensiones respecto al Pretest, con el mayor aumento en Confianza ($\Delta=+0.430$), seguido de Respeto ($\Delta=+0.151$), Implicación ($\Delta=+0.141$) y Atención ($\Delta=+0.114$). Este patrón es consistente con una intervención cuyo efecto principal se concentra en la dimensión socioemocional del instrumento.
+
+La prueba de Shapiro-Wilk reveló que Implicación mantuvo una desviación marcada de la normalidad (p\<.0001), coherente con el efecto techo ya documentado en el Pretest ($\bar{x}=4.62$, con máximo en 5.00). Atención se mantuvo en el límite de significancia (p=.054). Sin embargo, Respeto pasó de cumplir el supuesto de normalidad en el Pretest (p=.453) a violarlo en el Postest (p=.0006), no por compresión hacia el techo sino por un ensanchamiento del rango hacia el extremo inferior (mínimo=2.00 frente a 2.86 en el Pretest). Este patrón es consistente con la presencia de un caso atípico ya identificado en el análisis de perfiles del Postest, cuya puntuación mínima en Respeto (2.00) se apartaba sustancialmente del resto de la muestra, y no debe interpretarse como una tendencia generalizada de la cohorte. Confianza fue la única dimensión que mantuvo normalidad en ambas fases (Pretest p=.135; Postest p=.292).
+
+En consecuencia, las comparaciones Pretest-Postest deben realizarse mediante la prueba de Wilcoxon para muestras pareadas en Atención, Respeto e Implicación, y mediante la prueba t de Student pareada en Confianza, dimensión que cumplió el supuesto de normalidad en ambos momentos de medición.
+
+- Con $n = 43$, no podemos usar métodos que requieran grandes volúmenes de datos. El mejor procedimiento para muestras pequeñas no es el K-means tradicional (que es sensible a valores extremos), sino el Análisis de Clúster Jerárquico con el Método de Ward. Vizualicemos el dendograma
+
+```{r siluetapostestq}
+datos_cluster_post <- as.data.frame(lapply(post[dims_validas], escalar_rango))
+hc_post <- hclust(dist(datos_cluster_post, method = "euclidean"), method = "ward.D2")
+
+grafico_silueta(datos_cluster_post)
+```
+
+De forma análoga al análisis del Pretest, el criterio de la silueta aplicado al Postest (n=43) identificó k=2 como la solución óptima, con un ancho de silueta promedio de .391,superior al obtenido en el Pretest (.297), seguido de una caída pronunciada en k=3 (.213). Esta mejora en la separación de perfiles es consistente con el efecto esperado de la intervención pedagógica, que plausiblemente acentuó las diferencias individuales en el grado de asimilación de la competencia intercultural. Aunque el valor máximo se ubica aún dentro del rango de estructura "débil, potencialmente artificial" según @kaufmanrousseeuw1990, su proximidad al límite superior de esa banda (.50) sugiere una segmentación más definida que la observada en el Pretest. Se adoptó k=2 en ambas fases del estudio, tanto por este criterio estadístico como por la necesidad de mantener comparabilidad metodológica entre los perfiles Pretest y Postest.
+
+```{r wsspostestdd}
+grafico_codo(wss_dendrograma(datos_cluster_post, hc_post), "Método del codo — Postest")
+```
+
+El método del codo, calculado sobre el dendrograma de Ward.D2 del Postest, mostró una disminución gradual de la suma de cuadrados intra-cluster sin un punto de inflexión pronunciado, aunque la mayor reducción relativa se observó entre k=2 y k=3. Este patrón es consistente con el criterio de la silueta, que identificó k=2 como la solución de mejor ajuste. En conjunto, ambos criterios respaldan la adopción de k=2 también en el Postest, manteniendo así la comparabilidad metodológica de la tipología de perfiles entre ambas fases del estudio.
+
+```{r dendogramawe2}
+grafico_dendrograma(hc_post, "Dendrograma de Perfiles Interculturales (n=43, Postest)")
+```
+
+El dendrograma de la solución final (k=2, Postest) confirma la estructura jerárquica identificada mediante los criterios de silueta y codo: el clúster de menor tamaño (rojo) se separa del resto de la muestra a una altura considerablemente mayor (\~2.6) que la que separa las subdivisiones internas del clúster mayoritario (turquesa, \~1.4), evidenciando que una partición en tres grupos fragmentaría innecesariamente un subgrupo estructuralmente homogéneo. A diferencia de la solución exploratoria inicial con k=3, que aislaba un caso atípico como clúster singleton, la solución de dos perfiles no presenta grupos de tamaño mínimo, respaldando su mayor estabilidad estadística y su comparabilidad metodológica con la solución adoptada en el Pretest.
+
+- Ahora, obtendremos los grupos por la caracterización de clusters
+
+```{r gruposdeperfiles2}
+perfiles_post <- cutree(hc_post, k = 2)
+descriptivos_perfil(post, perfiles_post) %>%
+  knitr::kable(caption = "Comparación de perfiles por dimensión (k=2, Postest)", align = "llrrrrrr")
+```
+
+La caracterización de perfiles en el Postest reveló la misma jerarquía de dimensiones discriminantes observada en el Pretest. El perfil de Alta Sensibilidad Intercultural (n=30) mostró puntuaciones superiores en las cuatro dimensiones, con la brecha más amplia respecto al perfil de Baja Sensibilidad (n=13) concentrada nuevamente en Confianza ($\Delta=0.983$), seguida de Implicación ($\Delta=0.558$), Atención ($\Delta=0.547$) y Respeto ($\Delta=0.370$). Este patrón, consistente entre ambas fases del estudio, refuerza la conclusión de que la diferenciación entre perfiles de sensibilidad intercultural responde principalmente a factores socioemocionales de confianza y seguridad en la interacción, más que a diferencias en la valoración actitudinal de la diversidad cultural. Cabe destacar que el valor mínimo observado en Respeto (2.00), correspondiente a un caso previamente identificado como atípico, se ubicó dentro del perfil de Alta Sensibilidad, sugiriendo que dicho estudiante mantiene un perfil de alta disposición general pese a una percepción particularmente baja en esta dimensión específica.
+
+```{r vizcluster2}
+fviz_cluster(list(data = datos_cluster_post, cluster = perfiles_post),
+             palette = "jco", ellipse.type = "convex", repel = TRUE, ggtheme = theme_bw(),
+             main = "Mapa de Perfiles de Sensibilidad Intercultural (Postest, k=2, n=43)")
+```
+
+El mapa de clusters en dos dimensiones (Postest, k=2) confirma la separación identificada mediante el criterio de la silueta, con una frontera clara entre ambos perfiles a lo largo de la primera dimensión factorial (Dim1 = 51.5% de la varianza), sin solapamiento entre las regiones convexas de cada grupo. Esta separación más nítida que la observada en el Pretest (Dim1 = 45.9%) es consistente con el mayor ancho de silueta obtenido en esta fase (.391 frente a .297), sugiriendo que la intervención pedagógica pudo haber acentuado la diferenciación entre los perfiles de sensibilidad intercultural.
+
+Asimismo, el mapa permite visualizar el carácter atípico del estudiante 37, cuya posición se aleja marcadamente del resto de los integrantes del Cluster 1 (Alta Sensibilidad) a lo largo de la segunda dimensión (Dim2), sin dejar por ello de pertenecer estructuralmente a dicho grupo. Este patrón corrobora que, si bien este caso presenta una puntuación particularmente baja en Respeto, sus valores en las restantes dimensiones lo mantienen alineado con el perfil de mayor sensibilidad intercultural general.
+
+```{r normalidadperfilespostestk2}
+normalidad_perfil(post, perfiles_post) %>%
+  knitr::kable(caption = "Verificación del supuesto de normalidad por dimensión y perfil (Postest, k=2)",
+               align = "ccccc")
+```
+
+La verificación de normalidad por dimensión y perfil en el Postest mostró que el perfil de Baja Sensibilidad (n=13) cumplió el supuesto de normalidad en las cuatro dimensiones, mientras que el perfil de Alta Sensibilidad (n=30) presentó desviaciones significativas en Respeto (p=.0001) e Implicación (p\<.0001). Este patrón replica el observado en el Pretest, donde el perfil de mayor sensibilidad también violaba la normalidad en las dimensiones con medias más cercanas al techo de la escala, consistente con el efecto de compresión documentado previamente (@francomartinez2023). La violación de normalidad en Respeto es, adicionalmente, atribuible al caso atípico ya identificado (estudiante 37, con puntuación mínima de 2.00 en esta dimensión), cuyo valor extremo dentro de una distribución por lo demás comprimida hacia el máximo de la escala favorece el rechazo de la prueba de Shapiro-Wilk.
+
+```{r permanova-postest}
+df_final <- post %>% mutate(Experimento = "Postest", Perfil = factor(perfiles_post))
+datos_permanova_postest <- datos_cluster_post
+
+set.seed(123)
+print("--- RESULTADO DE PERMANOVA (Postest, k=2) ---")
+adonis2(datos_permanova_postest ~ Perfil, data = df_final %>% filter(Experimento == "Postest"),
+        permutations = 999, method = "euclidean")
+```
+
+El análisis de PERMANOVA en el Postest evidenció diferencias significativas entre los centroides de los perfiles ($F_{1,41}=29.22$, $R^2=.416$, $p<.001$), con un tamaño de efecto superior al observado en el Pretest ($R^2=.326$). Este incremento en la varianza explicada por la pertenencia al perfil, junto con el mayor ancho de silueta obtenido en esta fase (.391 frente a .297) y la ausencia de solapamiento visual entre clusters en el mapa 2D, sugiere que la intervención pedagógica no solo modificó la distribución de estudiantes entre perfiles, sino que acentuó la separación estructural entre ellos.
+
+Para descartar que esta diferencia obedeciera a una heterogeneidad de las dispersiones —dado el desbalance de tamaños entre perfiles (n=30 vs n=13)—, se aplicó nuevamente la prueba PERMDISP (@anderson2006) sobre las mismas dimensiones estandarizadas, con distancia euclídea y 999 permutaciones.
+
+```{r permdisp-postest}
+dispersion_post <- betadisper(dist(datos_permanova_postest, method = "euclidean"), df_final$Perfil, type = "centroid")
+
+print("--- DISTANCIA PROMEDIO AL CENTROIDE (Postest, k=2) ---")
+round(tapply(dispersion_post$distances, df_final$Perfil, mean), 3)
+
+set.seed(123)
+print("--- RESULTADO DE PERMDISP (Postest, k=2) ---")
+permutest(dispersion_post, permutations = 999)
+```
+
+Las distancias promedio al centroide fueron similares en ambos perfiles (Alta Sensibilidad: 0.310; Baja Sensibilidad: 0.363), sin diferencias significativas ($F_{1,41}=1.10$, $p=.285$). En consecuencia, y a diferencia de lo observado en el Pretest, el resultado del PERMANOVA en el Postest puede atribuirse a una diferencia en la localización de los centroides de los perfiles y no a una mayor dispersión de alguno de ellos, pese al desbalance de tamaños. La comparación entre fases muestra además que el perfil de Baja Sensibilidad redujo su heterogeneidad interna (de 0.411 a 0.363), lo que, junto con el aumento del ancho de silueta (.297 a .391), indica perfiles más definidos y homogéneos tras la intervención.
+
+## Comparación de los mapas de clusters
+
+La comparación de la distribución de perfiles entre fases mostró un incremento en la proporción de estudiantes clasificados en el perfil de Alta Sensibilidad Intercultural, del 64.6% en el Pretest (n=31/48) al 69.8% en el Postest (n=30/43), con una reducción correspondiente en el perfil de Baja Sensibilidad (35.4% a 30.2%). Este patrón agregado es consistente con un efecto positivo de la intervención pedagógica sobre la distribución general de perfiles, aunque no permite, por sí solo, establecer si los mismos estudiantes migraron de perfil entre fases, análisis que requeriría el emparejamiento individual de casos mediante un identificador común entre el Pretest y el Postest.
+
+Cabe señalar que, dado que la asignación numérica de los clusters (1, 2) es arbitraria en cada ejecución del algoritmo de agrupamiento jerárquico, el perfil de Alta Sensibilidad correspondió al Cluster 1 en el Pretest y al Cluster 1 en el Postest únicamente por coincidencia en la codificación de color de las figuras, por lo que las etiquetas de perfil se reportan siempre por su denominación sustantiva (Alta/Baja Sensibilidad) y no por el número de clúster.
+
+## Conclusiones
+
+En primer lugar, la Escala de Sensibilidad Intercultural (ISS) mostró una fiabilidad global aceptable en la muestra de futuros profesores de inglés ($\alpha=.708$; $G6=.888$). En el análisis por dimensiones, Atención y Confianza alcanzaron niveles satisfactorios, mientras que Respeto e Implicación se retuvieron con base en criterios complementarios. Disfrute se excluyó por la ausencia de covarianza sistemática entre sus ítems ($\alpha=.068$; $\bar{r}=.038$), por lo que los análisis posteriores se basaron en cuatro dimensiones y en una puntuación global de 21 ítems.
+
+En segundo lugar, el análisis de clúster jerárquico identificó dos perfiles de sensibilidad intercultural, Alta y Baja, tanto en el Pretest como en el Postest. Su rasgo diferenciador más consistente fue la **Confianza en la interacción intercultural**, con una brecha cercana a un punto entre perfiles en ambas mediciones. En cambio, el **Respeto** hacia la diferencia cultural se mantuvo en niveles similares en los dos grupos. Esto indica que la limitación del perfil de Baja Sensibilidad no es actitudinal, sino de naturaleza socioemocional: una menor seguridad y autoeficacia para comunicarse con personas de otras culturas.
+
+En tercer lugar, la estructura de perfiles fue más nítida después de la intervención. El ancho de silueta pasó de .297 a .391 y la varianza explicada por la pertenencia al perfil, de $R^2=.326$ a $R^2=.416$. Además, la proporción de estudiantes con Alta Sensibilidad aumentó del 64.6% al 69.8%. La prueba PERMDISP confirmó que en el Postest la diferencia entre perfiles corresponde a la localización de sus centroides y no a una heterogeneidad de dispersión ($p=.285$), mientras que en el Pretest el perfil de Baja Sensibilidad era significativamente más heterogéneo ($p=.040$). En conjunto, estos resultados indican que, tras la experiencia telecolaborativa, los perfiles se volvieron más definidos y homogéneos internamente.
+
+Finalmente, como se detalla en el Capítulo \@ref(cuanti), los grupos Control y Experimental eran equivalentes al inicio y ambos mejoraron sus puntuaciones medias del Pretest al Postest, con trayectorias prácticamente paralelas en Atención, Implicación, Confianza y la puntuación global. Las pruebas formales de interacción Grupo × Tiempo (ANCOVA, modelo mixto y comparación de ganancias) no detectaron un efecto diferencial significativo de la intervención en ninguna dimensión, y la transición de estudiantes entre perfiles fue similar en ambos grupos. Este patrón es más compatible con un efecto general del tiempo que con un efecto específico de la telecolaboración. La única dimensión con una divergencia apreciable fue **Respeto**: el grupo Experimental pasó de 3.668 a 3.913 —una mejora significativa dentro del grupo—, mientras que el grupo Control se mantuvo en 3.705. Sin embargo, la ventaja del grupo Experimental, de magnitud pequeña a moderada ($\eta^2_p=.048$), no alcanzó significancia estadística, por lo que constituye una tendencia a favor de un posible efecto de la telecolaboración sobre la valoración de la diversidad cultural, que deberá confirmarse en estudios con muestras mayores.
+
+**Limitaciones.** El tamaño muestral es reducido (n=48 en el Pretest y 43 en el Postest) y los grupos están desbalanceados, lo que limita la potencia para detectar diferencias entre grupos de magnitud pequeña o moderada; además, los cinco estudiantes sin Postest pertenecían al grupo Control, aunque no difirieron de quienes completaron el estudio. Se observó un efecto techo en Atención e Implicación y la dimensión Disfrute tuvo un bajo desempeño. Además, los perfiles se derivaron del mismo conjunto de datos sobre el que se aplicaron el PERMANOVA y el PERMDISP, por lo que estas pruebas confirman la separación observada más que constituir una evaluación inferencial independiente.
