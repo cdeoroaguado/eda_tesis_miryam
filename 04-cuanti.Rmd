@@ -90,7 +90,7 @@ bind_rows(lapply(variables_iss, function(v) {
          U = unname(prueba$statistic), p = fp(prueba$p.value),
          r = f3(r_efecto(prueba$p.value, length(control) + length(experimental))))
 })) %>%
-  knitr::kable(caption = "Equivalencia inicial de los grupos en el Pretest (U de Mann-Whitney)",
+  knitr::kable(format = "html", caption = "Equivalencia inicial de los grupos en el Pretest (U de Mann-Whitney)",
                col.names = c("Dimensión", "M", "DE", "Mdn", "M", "DE", "Mdn", "U", "p", "r"),
                align = "lrrrrrrrrr") %>%
   kableExtra::kable_styling(full_width = FALSE) %>%
@@ -113,7 +113,7 @@ bind_rows(lapply(variables_iss, function(v) {
          U = unname(prueba$statistic), p = fp(prueba$p.value),
          r = f3(r_efecto(prueba$p.value, length(sin_post) + length(con_post))))
 })) %>%
-  knitr::kable(caption = "Pretest del grupo Control según hayan respondido o no el Postest (U de Mann-Whitney)",
+  knitr::kable(format = "html", caption = "Pretest del grupo Control según hayan respondido o no el Postest (U de Mann-Whitney)",
                col.names = c("Dimensión", "M", "DE", "Mdn", "M", "DE", "Mdn", "U", "p", "r"),
                align = "lrrrrrrrrr") %>%
   kableExtra::kable_styling(full_width = FALSE) %>%
@@ -232,7 +232,7 @@ bind_rows(lapply(variables_iss, function(v) {
          gl = coeficientes[, "DF"], t = sprintf("%.2f", coeficientes[, "t-value"]),
          p = fp(coeficientes[, "p-value"]))
 })) %>%
-  knitr::kable(caption = "Coeficientes de efectos fijos del modelo lineal mixto (n=48)",
+  knitr::kable(format = "html", caption = "Coeficientes de efectos fijos del modelo lineal mixto (n=48)",
                col.names = c("Dimensión", "Término", "b", "EE", "gl", "t", "p"), align = "llrrrrr") %>%
   kableExtra::kable_styling(full_width = FALSE) %>%
   kableExtra::collapse_rows(columns = 1, valign = "top")
