@@ -100,14 +100,21 @@ control_pre <- pre %>% mutate(Respondio_postest = con_postest) %>% filter(Var_Gr
 bind_rows(lapply(variables_iss, function(v) {
   sin_post <- control_pre[[v]][!control_pre$Respondio_postest]
   con_post <- control_pre[[v]][control_pre$Respondio_postest]
-  tibble(Dimension = v, `M sin postest (n=5)` = f3(mean(sin_post)), `M con postest (n=15)` = f3(mean(con_post)),
-         p = fp(wilcox.test(sin_post, con_post, exact = FALSE)$p.value))
+  prueba <- wilcox.test(sin_post, con_post, exact = FALSE)
+  tibble(Dimension = v,
+         M_sin = f3(mean(sin_post)), DE_sin = f3(sd(sin_post)), Mdn_sin = f3(median(sin_post)),
+         M_con = f3(mean(con_post)), DE_con = f3(sd(con_post)), Mdn_con = f3(median(con_post)),
+         U = unname(prueba$statistic), p = fp(prueba$p.value),
+         r = f3(r_efecto(prueba$p.value, length(sin_post) + length(con_post))))
 })) %>%
   knitr::kable(caption = "Pretest del grupo Control según hayan respondido o no el Postest (U de Mann-Whitney)",
-               align = "lrrr")
+               col.names = c("Dimensión", "M", "DE", "Mdn", "M", "DE", "Mdn", "U", "p", "r"),
+               align = "lrrrrrrrrr") %>%
+  kableExtra::kable_styling(full_width = FALSE) %>%
+  kableExtra::add_header_above(c(" " = 1, "Sin postest (n=5)" = 3, "Con postest (n=15)" = 3, " " = 3))
 ```
 
-Los estudiantes que abandonaron el estudio no difirieron de quienes lo completaron (todas las $p>.16$), por lo que no hay indicios de que la pérdida de participantes haya sesgado la composición del grupo Control.
+Los estudiantes que abandonaron el estudio no difirieron de quienes lo completaron (todas las $p>.16$), y sus medianas fueron similares en todas las dimensiones (idénticas en Confianza, $Mdn=3.000$). Los tamaños del efecto fueron pequeños o nulos ($r\leq.18$), salvo en Atención ($r=.32$, moderado), donde quienes abandonaron puntuaban algo más alto; con solo cinco casos, esta diferencia no alcanza significancia y no se acompaña de un patrón consistente en las demás dimensiones, por lo que no hay indicios de que la pérdida de participantes haya sesgado la composición del grupo Control.
 
 ## Efecto de la intervención: interacción Grupo × Tiempo
 
