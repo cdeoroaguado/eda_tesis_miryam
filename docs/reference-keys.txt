@@ -20,6 +20,9 @@ tab:equivalencia
 tab:perdida-participantes
 tab:interaccion
 tab:supuestos-ancova
+tab:coeficientes-mixto
+tab:supuestos-mixto
+tab:robustez-mixto
 tab:cambio-intragrupo
 tab:transicion-perfiles
 contexto-del-problema
@@ -43,5 +46,6 @@ cuanti
 análisis-exploratorio-pretest-postest
 equivalencia-inicial-de-los-grupos
 efecto-de-la-intervención-interacción-grupo-tiempo
+modelo-lineal-mixto-coeficientes-y-supuestos
 cambio-dentro-de-cada-grupo
 transición-entre-perfiles-de-sensibilidad-intercultural

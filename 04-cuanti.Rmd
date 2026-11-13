@@ -200,6 +200,107 @@ bind_rows(lapply(variables_iss, function(v) {
 
 No se encontraron diferencias significativas entre las pendientes de regresión de ambos grupos en ninguna dimensión (todas las $p>.12$), y las varianzas residuales fueron homogéneas (todas las $p>.14$), por lo que el ANCOVA resulta apropiado para estos datos. El supuesto de normalidad de los residuos no se cumplió en Respeto ni en Implicación ($p=.004$ en ambas), coherente con el efecto techo y el caso atípico identificados en el Capítulo \@ref(validacion). No obstante, las estimaciones robustas condujeron a las mismas conclusiones que el ANCOVA clásico: en Respeto, la prueba de permutación ($p=.165$) reprodujo prácticamente el valor clásico ($p=.163$) y la estimación con errores robustos fue aún más conservadora ($p=.250$). En consecuencia, la ausencia de un efecto diferencial significativo de la intervención no obedece a la violación de supuestos.
 
+### Modelo lineal mixto: coeficientes y supuestos
+
+El modelo mixto se especificó como $Y_{it} = \beta_0 + \beta_1\,\text{Tiempo}_t + \beta_2\,\text{Grupo}_i + \beta_3\,(\text{Tiempo}\times\text{Grupo})_{it} + u_i + \varepsilon_{it}$, donde $u_i$ es el intercepto aleatorio de cada estudiante. Con el grupo Control y el Pretest como categorías de referencia, $\beta_0$ es la media del Control en el Pretest, $\beta_1$ el cambio del Control entre aplicaciones, $\beta_2$ la diferencia entre grupos en el Pretest y $\beta_3$ la diferencia adicional en el cambio del grupo Experimental respecto al Control, que es el parámetro que evalúa el efecto de la intervención.
+
+```{r coeficientes-mixto}
+nombres_terminos <- c("Intercepto (Control, Pretest)", "Tiempo (cambio del Control)",
+                      "Grupo (diferencia en el Pretest)", "Tiempo × Grupo (interacción)")
+ajustar_mixto <- function(v, datos = datos_largos, ...) {
+  nlme::lme(as.formula(paste(v, "~ Tiempo * Grupo")), random = ~ 1 | Estudiante, data = datos, ...)
+}
+termino_interaccion <- "TiempoPostest:GrupoExperimental"
+
+bind_rows(lapply(variables_iss, function(v) {
+  coeficientes <- summary(ajustar_mixto(v))$tTable
+  tibble(Dimension = v, Termino = nombres_terminos,
+         b = f3(coeficientes[, "Value"]), EE = f3(coeficientes[, "Std.Error"]),
+         gl = coeficientes[, "DF"], t = sprintf("%.2f", coeficientes[, "t-value"]),
+         p = fp(coeficientes[, "p-value"]))
+})) %>%
+  knitr::kable(caption = "Coeficientes de efectos fijos del modelo lineal mixto (n=48)",
+               col.names = c("Dimensión", "Término", "b", "EE", "gl", "t", "p"), align = "llrrrrr") %>%
+  kableExtra::kable_styling(full_width = FALSE) %>%
+  kableExtra::collapse_rows(columns = 1, valign = "top")
+```
+
+Los coeficientes confirman que los grupos partieron de niveles equivalentes (ninguna diferencia de Grupo en el Pretest fue significativa) y que ninguna interacción Tiempo × Grupo alcanzó significancia. El grupo Control aumentó significativamente en Confianza ($b=0.427$, $p=.015$) y mostró un aumento marginal en la puntuación global ($b=0.144$, $p=.051$); como las interacciones correspondientes son prácticamente nulas, el grupo Experimental experimentó un aumento de magnitud similar.
+
+Se verificaron los supuestos del modelo mixto: (a) la normalidad de los residuos y de los interceptos aleatorios, con la prueba de Shapiro-Wilk; (b) la homogeneidad de las varianzas residuales entre las cuatro combinaciones de Grupo y Tiempo, con la prueba de Levene y con una prueba de razón de verosimilitudes (LRT) que compara el modelo de varianza común con uno que estima una varianza distinta para cada combinación; y (c) el supuesto de que los datos faltan al azar (MAR), mediante una regresión logística del abandono sobre el Pretest en el grupo Control y comparando la interacción estimada con los 48 estudiantes y con los 43 que respondieron ambas aplicaciones.
+
+```{r supuestos-mixto}
+datos_largos <- datos_largos %>% mutate(Celda = interaction(Grupo, Tiempo))
+control_abandono <- pre %>% mutate(Abandono = !con_postest) %>% filter(Var_Grupo == "Control")
+completos <- datos_largos %>% filter(Estudiante %in% which(con_postest))
+
+bind_rows(lapply(variables_iss, function(v) {
+  # (a) Normalidad de residuos e interceptos aleatorios
+  mixto <- ajustar_mixto(v)
+  residuos <- resid(mixto, type = "normalized")
+  # (b) Homogeneidad de varianzas: Levene sobre los residuos y LRT varianza común vs. varianza por celda
+  residuos_ml <- resid(ajustar_mixto(v, method = "ML"))
+  levene <- anova(lm(abs(residuos_ml - ave(residuos_ml, datos_largos$Celda, FUN = median)) ~ datos_largos$Celda))
+  lrt <- anova(ajustar_mixto(v, method = "ML"),
+               ajustar_mixto(v, method = "ML", weights = nlme::varIdent(form = ~ 1 | Celda)))
+  heterogeneo <- summary(ajustar_mixto(v, weights = nlme::varIdent(form = ~ 1 | Celda)))$tTable[termino_interaccion, ]
+  # (c) Datos faltantes: abandono según el Pretest y estimación solo con los casos completos
+  logistica <- glm(Abandono ~ control_abandono[[v]], family = binomial, data = control_abandono)
+  solo_completos <- summary(ajustar_mixto(v, completos))$tTable[termino_interaccion, ]
+  tibble(Dimension = v,
+         `SW residuos: p` = fp(shapiro.test(residuos)$p.value),
+         `SW interceptos: p` = fp(shapiro.test(nlme::ranef(mixto)[, 1])$p.value),
+         `Levene: p` = fp(levene$`Pr(>F)`[1]),
+         `LRT varianzas: p` = fp(lrt$`p-value`[2]),
+         `Interacción (var. por celda)` = sprintf("%s (p=%s)", f3(heterogeneo["Value"]), fp(heterogeneo["p-value"])),
+         `Abandono: p` = fp(summary(logistica)$coefficients[2, 4]),
+         `Interacción (n=43)` = sprintf("%s (p=%s)", f3(solo_completos["Value"]), fp(solo_completos["p-value"])))
+})) %>%
+  knitr::kable(caption = "Supuestos del modelo lineal mixto: normalidad, homogeneidad de varianzas y datos faltantes",
+               align = "lrrrrrrr")
+```
+
+La normalidad de los residuos no se cumplió en Respeto ($p=.002$) ni en Implicación ($p=.003$), y en esta última tampoco la de los interceptos aleatorios ($p=.022$). En Respeto, la falla se debe principalmente a un único valor extremo: el Postest del estudiante identificado como caso atípico en el Capítulo \@ref(validacion), con un residuo normalizado de −3.91, el único superior a 2.5 en valor absoluto entre todas las dimensiones. En Implicación, la falla es coherente con el efecto techo de la dimensión. La prueba de Levene no detectó diferencias de varianza (todas las $p>.33$), pero la LRT sí lo hizo en Respeto ($p=.008$): la desviación estándar residual del grupo Control en el Postest fue cerca del doble que la de las demás combinaciones. Al permitir una varianza distinta para cada combinación, la interacción en Respeto se mantuvo prácticamente igual (0.257), con un valor $p$ más alto ($p=.193$).
+
+Respecto a los datos faltantes, ninguna dimensión del Pretest predijo el abandono en el grupo Control (todas las $p>.15$), y la interacción estimada con los 43 estudiantes con datos completos fue muy similar a la obtenida con los 48 (en Respeto, 0.245 frente a 0.258), por lo que el supuesto MAR resulta razonable y la inclusión de los cinco estudiantes sin Postest no altera los resultados.
+
+Dado que no todos los supuestos se cumplieron, la interacción se evaluó también mediante dos procedimientos que no requieren normalidad ni homogeneidad de varianzas: un intervalo de confianza bootstrap del 95% (2 000 remuestreos de estudiantes, estratificados por grupo, de modo que cada estudiante conserva sus dos mediciones) y una prueba de permutación (2 000 permutaciones de las etiquetas de grupo entre estudiantes).
+
+```{r robustez-mixto, cache=TRUE}
+set.seed(123)
+n_remuestreos <- 2000
+estudiantes_por_grupo <- split(seq_len(nrow(pre)), pre$Var_Grupo)
+filas_por_estudiante <- split(datos_largos, datos_largos$Estudiante)
+
+bind_rows(lapply(variables_iss, function(v) {
+  observado <- summary(ajustar_mixto(v))$tTable[termino_interaccion, ]
+  # Bootstrap por estudiante, estratificado por grupo
+  bootstrap <- replicate(n_remuestreos, {
+    ids <- unlist(lapply(estudiantes_por_grupo, function(s) sample(s, length(s), replace = TRUE)))
+    remuestra <- bind_rows(Map(function(id, k) mutate(filas_por_estudiante[[id]], Estudiante = k), ids, seq_along(ids)))
+    tryCatch(nlme::fixef(ajustar_mixto(v, remuestra))[termino_interaccion], error = function(e) NA)
+  })
+  # Permutación de las etiquetas de grupo entre estudiantes
+  permutado <- replicate(n_remuestreos, {
+    grupo_perm <- sample(pre$Var_Grupo)
+    datos_perm <- datos_largos %>%
+      mutate(Grupo = factor(grupo_perm[Estudiante], levels = c("Control", "Experimental")))
+    tryCatch(summary(ajustar_mixto(v, datos_perm))$tTable[termino_interaccion, "t-value"], error = function(e) NA)
+  })
+  ic <- quantile(bootstrap, c(.025, .975), na.rm = TRUE)
+  tibble(Dimension = v, Interaccion = f3(observado["Value"]),
+         `IC 95% bootstrap` = sprintf("[%s, %s]", f3(ic[1]), f3(ic[2])),
+         `p clásico` = fp(observado["p-value"]),
+         `p permutación` = fp((sum(abs(permutado) >= abs(observado["t-value"]), na.rm = TRUE) + 1) /
+                                (sum(!is.na(permutado)) + 1)))
+})) %>%
+  knitr::kable(caption = "Interacción Tiempo × Grupo del modelo mixto: intervalos bootstrap y prueba de permutación",
+               col.names = c("Dimensión", "Interacción", "IC 95% bootstrap", "p clásico", "p permutación"),
+               align = "lrrrr")
+```
+
+Todos los intervalos bootstrap incluyeron el cero y ninguna prueba de permutación fue significativa. En Respeto, la interacción mantuvo su dirección favorable al grupo Experimental (IC 95%: −0.073 a 0.623; permutación $p=.135$). En consecuencia, las violaciones de supuestos detectadas no modifican la conclusión del modelo mixto: no hay evidencia de un efecto diferencial significativo de la intervención, y la ventaja del grupo Experimental en Respeto debe interpretarse como una tendencia, con valores $p$ entre .125 y .193 según el procedimiento empleado.
+
 ## Cambio dentro de cada grupo
 
 Para describir la magnitud del cambio en cada grupo, se compararon el Pretest y el Postest mediante la prueba de Wilcoxon para muestras pareadas en Atención, Respeto, Implicación y la puntuación global, y mediante la prueba t de Student pareada en Confianza, la única dimensión que cumplió el supuesto de normalidad en ambas mediciones. Los valores p se ajustaron por comparaciones múltiples dentro de cada grupo con el método de Holm.
