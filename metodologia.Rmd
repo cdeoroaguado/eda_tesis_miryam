@@ -19,7 +19,7 @@ Este capítulo describe el enfoque y el diseño del estudio, los participantes, 
 
 El estudio forma parte de una investigación con enfoque mixto que integra datos cuantitativos y cualitativos para comprender la influencia de la telecolaboración en el desarrollo de la sensibilidad intercultural y la competencia simbólica de futuros profesores de inglés (Capítulo \@ref(contexto)). Este documento aborda el **componente cuantitativo**, centrado en la sensibilidad intercultural.
 
-Se empleó un diseño con medición antes y después de la intervención (Pretest y Postest) y grupo de comparación: el grupo Experimental participó en la experiencia telecolaborativa y el grupo Control no. Esta estructura permite distinguir el cambio atribuible a la intervención del cambio general debido al paso del tiempo, mediante la interacción Grupo × Tiempo.
+Se empleó un **diseño cuasiexperimental** con medición antes y después de la intervención (Pretest y Postest) y grupo de comparación no equivalente: el grupo Experimental participó en la experiencia telecolaborativa y el grupo Control no. Los estudiantes no se asignaron al azar a los grupos, sino que se trabajó con grupos ya existentes, por lo que no puede garantizarse de antemano que ambos fueran equivalentes. Por esa razón se verificó la equivalencia de los grupos en el Pretest (sección \@ref(equivalencia-inicial)) y el efecto de la intervención se estimó ajustando por el nivel inicial de cada estudiante. Esta estructura permite distinguir el cambio atribuible a la intervención del cambio general debido al paso del tiempo, mediante la interacción Grupo × Tiempo.
 
 ## Participantes
 
