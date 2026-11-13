@@ -84,14 +84,20 @@ bind_rows(lapply(variables_iss, function(v) {
   control <- pre_pareado[[v]][grupo_43 == "Control"]
   experimental <- pre_pareado[[v]][grupo_43 == "Experimental"]
   prueba <- wilcox.test(control, experimental, exact = FALSE)
-  tibble(Dimension = v, M_Control = f3(mean(control)), M_Experimental = f3(mean(experimental)),
+  tibble(Dimension = v,
+         M_ctrl = f3(mean(control)), DE_ctrl = f3(sd(control)), Mdn_ctrl = f3(median(control)),
+         M_exp = f3(mean(experimental)), DE_exp = f3(sd(experimental)), Mdn_exp = f3(median(experimental)),
          U = unname(prueba$statistic), p = fp(prueba$p.value),
          r = f3(r_efecto(prueba$p.value, length(control) + length(experimental))))
 })) %>%
-  knitr::kable(caption = "Equivalencia inicial de los grupos en el Pretest (U de Mann-Whitney)", align = "lrrrrr")
+  knitr::kable(caption = "Equivalencia inicial de los grupos en el Pretest (U de Mann-Whitney)",
+               col.names = c("Dimensión", "M", "DE", "Mdn", "M", "DE", "Mdn", "U", "p", "r"),
+               align = "lrrrrrrrrr") %>%
+  kableExtra::kable_styling(full_width = FALSE) %>%
+  kableExtra::add_header_above(c(" " = 1, "Control (n=15)" = 3, "Experimental (n=28)" = 3, " " = 3))
 ```
 
-No se encontraron diferencias significativas entre los grupos en ninguna dimensión ni en la puntuación global (todas las $p>.47$; $r\leq.11$), por lo que ambos grupos eran equivalentes al inicio de la intervención y la comparación de sus cambios es legítima.
+No se encontraron diferencias significativas entre los grupos en ninguna dimensión ni en la puntuación global (todas las $p>.47$; $r\leq.11$). Las medianas fueron muy próximas (idénticas en Respeto, $Mdn=3.714$) y las desviaciones estándar similares entre grupos; la mayor distancia entre medianas se dio en Implicación (4.333 frente a 4.667), una dimensión con efecto techo en la que pocas respuestas desplazan la mediana, sin que la diferencia resultara significativa ($p=.538$). Por tanto, ambos grupos eran equivalentes al inicio de la intervención y la comparación de sus cambios es legítima.
 
 Dado que los cinco estudiantes que no respondieron el Postest pertenecían al grupo Control, se examinó si esta pérdida pudo sesgar la comparación, contrastando su Pretest con el de los 15 estudiantes del grupo Control que sí completaron ambas aplicaciones.
 
