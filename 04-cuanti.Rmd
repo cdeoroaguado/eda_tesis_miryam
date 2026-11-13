@@ -22,7 +22,7 @@ resumen_pp %>%
   select(-EE) %>%
   mutate(across(c(M, DE, Mediana, Min, Max, Cambio), ~ sprintf("%.3f", .x)),
          `Cambio %` = sprintf("%.1f", `Cambio %`)) %>%
-  knitr::kable(caption = "Tabla 3.1. Estadisticos descriptivos por dimension, grupo y momento de medicion",
+  knitr::kable(caption = "Estadisticos descriptivos por dimension, grupo y momento de medicion",
                align = "llrrrrrrrrr", format = "html") %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE, font_size = 10) %>%
   collapse_rows(columns = 1:2, valign = "middle") %>%
@@ -30,7 +30,7 @@ resumen_pp %>%
            general_title = "Nota.", footnote_as_chunk = TRUE)
 ```
 
-La Tabla 3.1 presenta los estadísticos descriptivos de las cuatro dimensiones de la Sensibilidad Intercultural (Atención, Respeto, Implicación y Confianza) y de la puntuación global del ISS, diferenciados por grupo (Control y Experimental) y momento de medición (Pretest y Postest). En términos generales, ambos grupos mostraron incrementos en las puntuaciones medias tras la intervención, aunque la magnitud y consistencia de dichos cambios varió según la dimensión, sin un patrón uniforme a favor del grupo experimental en todos los casos.
+La Tabla \@ref(tab:expcontrol) presenta los estadísticos descriptivos de las cuatro dimensiones de la Sensibilidad Intercultural (Atención, Respeto, Implicación y Confianza) y de la puntuación global del ISS, diferenciados por grupo (Control y Experimental) y momento de medición (Pretest y Postest). En términos generales, ambos grupos mostraron incrementos en las puntuaciones medias tras la intervención, aunque la magnitud y consistencia de dichos cambios varió según la dimensión, sin un patrón uniforme a favor del grupo experimental en todos los casos.
 
 En Atención (D1), ambos grupos partieron de niveles ya elevados y mostraron incrementos modestos y prácticamente equivalentes: el grupo Control pasó de 4.305 (DE=0.362) a 4.438 (DE=0.308) (+3.1%), y el grupo Experimental de 4.378 (DE=0.417) a 4.520 (DE=0.355) (+3.2%). No se observa, en esta dimensión, una diferencia apreciable entre grupos.
 
