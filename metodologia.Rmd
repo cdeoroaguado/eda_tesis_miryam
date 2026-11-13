@@ -1,0 +1,88 @@
+# Metodología {#metodologia}
+
+```{r datos-metodologia, include=FALSE}
+n_total <- nrow(pre)
+n_grupo <- table(pre$Var_Grupo)
+n_post <- sum(con_postest)
+n_post_grupo <- table(pre$Var_Grupo[con_postest])
+n_perdidos <- n_total - n_post
+sexo <- table(pre$Q4)
+edad <- table(pre$Q3)
+estrato <- table(pre$Q5)
+lugares <- sort(table(pre$Lugar), decreasing = TRUE)
+pct <- function(x) sprintf("%.1f%%", 100 * x / n_total)
+```
+
+Este capítulo describe el enfoque y el diseño del estudio, los participantes, el instrumento, el procedimiento de recolección y preparación de los datos, y las técnicas estadísticas empleadas en cada uno de los análisis que se presentan en los capítulos siguientes.
+
+## Enfoque y diseño
+
+El estudio forma parte de una investigación con enfoque mixto que integra datos cuantitativos y cualitativos para comprender la influencia de la telecolaboración en el desarrollo de la sensibilidad intercultural y la competencia simbólica de futuros profesores de inglés (Capítulo \@ref(contexto)). Este documento aborda el **componente cuantitativo**, centrado en la sensibilidad intercultural.
+
+Se empleó un diseño con medición antes y después de la intervención (Pretest y Postest) y grupo de comparación: el grupo Experimental participó en la experiencia telecolaborativa y el grupo Control no. Esta estructura permite distinguir el cambio atribuible a la intervención del cambio general debido al paso del tiempo, mediante la interacción Grupo × Tiempo.
+
+## Participantes
+
+Participaron `r n_total` futuros profesores de inglés, `r n_grupo[["Experimental"]]` en el grupo Experimental y `r n_grupo[["Control"]]` en el grupo Control, todos con un nivel de avance académico intermedio. La mayoría eran mujeres (`r sexo[["Femenino"]]`; `r pct(sexo[["Femenino"]])`) y tenían entre 18 y 21 años (`r edad[["18-21 años"]]`; `r pct(edad[["18-21 años"]])`), y pertenecían principalmente a los estratos socioeconómicos 1 y 2 (`r estrato[["Estrato 1"]] + estrato[["Estrato 2"]]`; `r pct(estrato[["Estrato 1"]] + estrato[["Estrato 2"]])`). Los municipios de procedencia más frecuentes fueron `r names(lugares)[1]` (`r lugares[[1]]`) y `r names(lugares)[2]` (`r lugares[[2]]`). La caracterización completa de la muestra se presenta en el Capítulo \@ref(eda).
+
+Respondieron el Postest `r n_post` estudiantes (`r n_post_grupo[["Experimental"]]` del grupo Experimental y `r n_post_grupo[["Control"]]` del grupo Control). Los `r n_perdidos` estudiantes que no lo respondieron pertenecían al grupo Control; en la sección \@ref(equivalencia-inicial) se examina si esta pérdida sesgó la comparación.
+
+## Instrumento
+
+La sensibilidad intercultural se midió con la Escala de Sensibilidad Intercultural (*Intercultural Sensitivity Scale*, ISS) de @chenstarosta2000, en la versión en español adaptada por @ruizbernardo2012. La escala consta de 24 ítems con formato de respuesta tipo Likert de cinco puntos (de 1 a 5), agrupados en cinco dimensiones:
+
+- **Atención** (ítems 9, 12, 13, 14, 17, 19 y 21): flexibilidad cognitiva y atención ante la diferencia.
+- **Respeto** (ítems 2, 4, 8, 10, 18, 20 y 22): actitudes positivas hacia los valores y prácticas de otras culturas.
+- **Implicación** (ítems 1, 16 y 24): interés por interactuar con personas de otras culturas.
+- **Confianza** (ítems 3, 6, 7 y 11): seguridad al comunicarse interculturalmente.
+- **Disfrute** (ítems 5, 15 y 23): actitudes positivas hacia las experiencias interculturales.
+
+Ocho ítems están redactados en sentido inverso, de modo que una puntuación alta indica una menor sensibilidad intercultural: 2, 4, 10, 13, 15, 18, 20 y 22. El instrumento incluyó además un cuestionario sociodemográfico (nivel de avance académico, edad, sexo, estrato socioeconómico y lugar de procedencia) y preguntas sobre el perfil lingüístico y el consumo cultural de los estudiantes. La operacionalización completa de las variables y el enunciado de los 24 ítems se presentan en el Capítulo \@ref(operacionalizacion).
+
+## Procedimiento
+
+La escala se aplicó a ambos grupos en dos momentos: antes de la experiencia telecolaborativa (Pretest) y después de ella (Postest). Las respuestas de cada estudiante en las dos aplicaciones se emparejaron, de modo que fue posible analizar el cambio individual entre ambos momentos.
+
+## Preparación de los datos
+
+Los datos se prepararon en cuatro pasos:
+
+1. **Recodificación de los ítems inversos.** Los ocho ítems redactados en sentido inverso se recodificaron como $6 - x$, para que en todos los ítems una puntuación más alta indicara una mayor sensibilidad intercultural.
+2. **Puntuaciones por dimensión.** La puntuación de cada dimensión se calculó como la media de sus ítems, en la misma escala de 1 a 5.
+3. **Puntuación global.** Tras el análisis de fiabilidad (Capítulo \@ref(validacion)), la dimensión Disfrute se excluyó por la ausencia de covarianza sistemática entre sus ítems. La puntuación global de sensibilidad intercultural (ISS global) se calculó, por tanto, como la media de los 21 ítems de las cuatro dimensiones retenidas.
+4. **Escalamiento para el análisis de clúster.** Para la identificación de perfiles, las cuatro dimensiones se escalaron por rango (entre 0 y 1), de modo que todas contribuyeran por igual al cálculo de las distancias.
+
+## Análisis de datos
+
+El análisis se organizó en cuatro etapas, que corresponden a los capítulos siguientes del documento. En todas las pruebas se adoptó un nivel de significancia de $\alpha=.05$ bilateral. Los análisis se realizaron con `r R.version.string` y los paquetes `psych` (fiabilidad), `cluster` y `factoextra` (análisis de clúster), `vegan` (PERMANOVA y PERMDISP) y `nlme` (modelos mixtos).
+
+### Análisis exploratorio
+
+Las variables sociodemográficas, del perfil académico y lingüístico y de consumo cultural se describieron mediante frecuencias absolutas y porcentajes, y la procedencia de los estudiantes se representó en un mapa (Capítulo \@ref(eda)).
+
+### Fiabilidad del instrumento
+
+La consistencia interna de la escala se evaluó con los datos del Pretest, tanto para la escala global como para cada dimensión, mediante tres indicadores: el coeficiente alfa de Cronbach, el coeficiente lambda-6 de Guttman (G6) y la correlación inter-ítem promedio ($\bar{r}$). Dado que el alfa de Cronbach depende del número de ítems [@cortina1993], en las dimensiones con pocos ítems se consideró como criterio complementario que la correlación inter-ítem promedio se ubicara entre .15 y .50 [@clarkwatson1995]. Las dimensiones que no cumplieron ninguno de estos criterios se excluyeron de los análisis posteriores.
+
+### Perfiles de sensibilidad intercultural
+
+Para identificar perfiles de estudiantes con niveles similares de sensibilidad intercultural se aplicó, de forma independiente en el Pretest y en el Postest, un análisis de clúster jerárquico aglomerativo con el método de Ward [@ward1963] sobre la distancia euclídea entre las cuatro dimensiones escaladas por rango. Se eligió este procedimiento, en lugar de K-medias, por su mejor desempeño en muestras pequeñas y su menor sensibilidad a los valores extremos.
+
+El número de perfiles se determinó con el criterio del ancho de silueta promedio [@rousseeuw1987], evaluando soluciones de uno a diez clústeres, e interpretando su magnitud según @kaufmanrousseeuw1990; como criterio complementario se empleó el método del codo, basado en la suma de cuadrados intra-clúster. La solución elegida se representó mediante el dendrograma y un mapa de clústeres sobre los dos primeros componentes principales, y los perfiles se caracterizaron con la media, la desviación estándar y la mediana de cada dimensión. La normalidad de las dimensiones, en la muestra total y dentro de cada perfil, se evaluó con la prueba de Shapiro-Wilk [@shapirowilk1965].
+
+Dado que varias dimensiones no cumplieron el supuesto de normalidad, la diferencia entre los perfiles se contrastó mediante un análisis multivariante de varianza por permutaciones [PERMANOVA; @anderson2001], con distancia euclídea y 999 permutaciones. Como el PERMANOVA es sensible a la heterogeneidad de las dispersiones cuando los grupos tienen tamaños desiguales [@andersonwalsh2013], se verificó la homogeneidad de las dispersiones multivariantes con la prueba PERMDISP [@anderson2006], también con 999 permutaciones.
+
+### Efecto de la intervención
+
+El efecto de la telecolaboración se evaluó en cinco pasos (Capítulo \@ref(cuanti)):
+
+1. **Equivalencia inicial y pérdida de participantes.** Se compararon los grupos en el Pretest, y dentro del grupo Control a quienes respondieron o no el Postest, con la prueba U de Mann-Whitney [@mannwhitney1947], acompañada del tamaño del efecto $r = |Z|/\sqrt{N}$.
+2. **Interacción Grupo × Tiempo.** Se aplicaron tres aproximaciones complementarias:
+   - un **análisis de covarianza (ANCOVA)** sobre el Postest con el Pretest como covariable, con el eta cuadrado parcial ($\eta^2_p$) como tamaño del efecto. Se verificaron la homogeneidad de las pendientes de regresión, la normalidad de los residuos (Shapiro-Wilk) y la homogeneidad de varianzas (prueba de Levene basada en la mediana), y el efecto de Grupo se estimó también con errores estándar robustos HC3 [@longervin2000] y mediante una prueba de permutación con 9 999 permutaciones;
+   - un **modelo lineal mixto** [@lairdware1982; @pinheirobates2000] con efectos fijos de Tiempo, Grupo y su interacción y un intercepto aleatorio por estudiante, que permite incluir a los `r n_total` participantes. Se verificaron la normalidad de los residuos y de los interceptos aleatorios, la homogeneidad de las varianzas entre las combinaciones de Grupo y Tiempo (prueba de Levene y prueba de razón de verosimilitudes frente a un modelo con varianzas distintas) y el supuesto de que los datos faltan al azar (regresión logística del abandono sobre el Pretest y comparación con los casos completos). La interacción se evaluó además con un intervalo de confianza bootstrap del 95% (2 000 remuestreos de estudiantes estratificados por grupo) y una prueba de permutación (2 000 permutaciones);
+   - la **comparación de las ganancias** (Postest − Pretest) entre grupos con la prueba U de Mann-Whitney.
+3. **Cambio dentro de cada grupo.** Se compararon el Pretest y el Postest de cada grupo con la prueba de rangos con signo de Wilcoxon [@wilcoxon1945] en las dimensiones sin distribución normal y con la prueba t de Student para muestras pareadas en Confianza, con el tamaño del efecto $r$ o $d_z$, respectivamente. Los valores $p$ se ajustaron por comparaciones múltiples con el método de @holm1979.
+4. **Transición entre perfiles.** Se cruzó el perfil de cada estudiante en el Pretest con su perfil en el Postest, y se evaluó la simetría de los cambios en cada grupo con la prueba exacta de McNemar [@mcnemar1947].
+5. **Potencia estadística.** Se calculó, con la distribución $t$ no central, la diferencia mínima detectable con una potencia del 80% para los tamaños de grupo disponibles, así como la potencia alcanzada y el tamaño muestral necesario para el efecto observado en cada dimensión [@cohen1988].
+
+Las semillas aleatorias de los procedimientos de permutación y bootstrap se fijaron para garantizar la reproducibilidad de los resultados.

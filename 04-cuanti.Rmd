@@ -166,7 +166,7 @@ Ninguna de las tres aproximaciones detectó un efecto diferencial significativo 
 
 ### Supuestos del ANCOVA y estimaciones robustas
 
-Se verificaron los supuestos del ANCOVA: (a) la homogeneidad de las pendientes de regresión, mediante el término de interacción Pretest × Grupo; (b) la normalidad de los residuos, con la prueba de Shapiro-Wilk; y (c) la homogeneidad de varianzas entre grupos, con la prueba de Levene (basada en la mediana). Además, dado que algunas dimensiones no cumplen el supuesto de normalidad, el efecto de Grupo se estimó también con errores estándar robustos HC3 (@longervin2000) y mediante una prueba de permutación con 9 999 permutaciones de las etiquetas de grupo, que conserva el par Pretest-Postest de cada estudiante y no requiere normalidad.
+Se verificaron los supuestos del ANCOVA: (a) la homogeneidad de las pendientes de regresión, mediante el término de interacción Pretest × Grupo; (b) la normalidad de los residuos, con la prueba de Shapiro-Wilk; y (c) la homogeneidad de varianzas entre grupos, con la prueba de Levene (basada en la mediana). Además, dado que algunas dimensiones no cumplen el supuesto de normalidad, el efecto de Grupo se estimó también con errores estándar robustos HC3 [@longervin2000] y mediante una prueba de permutación con 9 999 permutaciones de las etiquetas de grupo, que conserva el par Pretest-Postest de cada estudiante y no requiere normalidad.
 
 ```{r supuestos-ancova}
 # Errores estándar robustos HC3
@@ -374,7 +374,7 @@ La mayoría de los estudiantes se mantuvo en su perfil inicial en ambos grupos (
 
 ## Potencia estadística {#potencia}
 
-Para valorar la ausencia de efectos significativos debe considerarse la potencia estadística del estudio (@cohen1988). Se calculó, para la comparación entre grupos de tamaño desigual (15 y 28 estudiantes; $\alpha=.05$ bilateral), la diferencia mínima detectable con una potencia del 80% y, para cada dimensión, el tamaño del efecto observado ($d$ de Cohen: diferencia ajustada del ANCOVA dividida por la desviación estándar combinada del Postest), la potencia con la que el estudio podía detectarlo y el número de estudiantes por grupo que se requeriría para alcanzar una potencia del 80%.
+Para valorar la ausencia de efectos significativos debe considerarse la potencia estadística del estudio [@cohen1988]. Se calculó, para la comparación entre grupos de tamaño desigual (15 y 28 estudiantes; $\alpha=.05$ bilateral), la diferencia mínima detectable con una potencia del 80% y, para cada dimensión, el tamaño del efecto observado ($d$ de Cohen: diferencia ajustada del ANCOVA dividida por la desviación estándar combinada del Postest), la potencia con la que el estudio podía detectarlo y el número de estudiantes por grupo que se requeriría para alcanzar una potencia del 80%.
 
 ```{r potencia}
 n_control <- sum(grupo_43 == "Control")

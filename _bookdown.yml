@@ -3,6 +3,7 @@ output_dir: docs
 delete_merged_file: true
 rmd_files:
   - index.Rmd
+  - metodologia.Rmd
   - 01-operacionalizacion.Rmd
   - 02-eda.Rmd
   - 03-validacion.Rmd

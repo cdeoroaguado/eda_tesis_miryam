@@ -105,7 +105,7 @@ grafico_frecuencias <- function(tab, orden_paneles, xlab) {
 }
 ```
 
-# Contexto del problema
+# Contexto del problema {#contexto}
 
 El estudio se centra en comprender la influencia que tiene la telecolaboración en el desarrollo de la sensibilidad intercultural y la competencia simbólica en futuros profesores de inglés. En los programas de formación docente en lenguas extranjeras, la capacidad de interactuar de manera efectiva y crítica con personas de diferentes culturas es fundamental. Sin embargo, aún existen vacíos en la comprensión de cómo experiencias pedagógicas mediadas por tecnología, como los proyectos telecolaborativos, contribuyen al desarrollo de estas competencias.
 

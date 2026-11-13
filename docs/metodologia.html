@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es" xml:lang="es">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 2 Metodología | Analisis de datos de sensibilidad intercultural</title>
+  <meta name="description" content="En este documento realizaremos el analisis exploratorio de los datos y sus respectiva parte inferencial de la sensibilidad intercultural" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 2 Metodología | Analisis de datos de sensibilidad intercultural" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="En este documento realizaremos el analisis exploratorio de los datos y sus respectiva parte inferencial de la sensibilidad intercultural" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 2 Metodología | Analisis de datos de sensibilidad intercultural" />
+  
+  <meta name="twitter:description" content="En este documento realizaremos el analisis exploratorio de los datos y sus respectiva parte inferencial de la sensibilidad intercultural" />
+  
+
+<meta name="author" content="Carlos de Oro Aguado" />
+
+
+<meta name="date" content="2026-09-05" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="operacionalizacion.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Análisis de datos para tesis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Contexto del problema</a></li>
+<li class="chapter" data-level="2" data-path="metodologia.html"><a href="metodologia.html"><i class="fa fa-check"></i><b>2</b> Metodología</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="metodologia.html"><a href="metodologia.html#enfoque-y-dise%C3%B1o"><i class="fa fa-check"></i><b>2.1</b> Enfoque y diseño</a></li>
+<li class="chapter" data-level="2.2" data-path="metodologia.html"><a href="metodologia.html#participantes"><i class="fa fa-check"></i><b>2.2</b> Participantes</a></li>
+<li class="chapter" data-level="2.3" data-path="metodologia.html"><a href="metodologia.html#instrumento"><i class="fa fa-check"></i><b>2.3</b> Instrumento</a></li>
+<li class="chapter" data-level="2.4" data-path="metodologia.html"><a href="metodologia.html#procedimiento"><i class="fa fa-check"></i><b>2.4</b> Procedimiento</a></li>
+<li class="chapter" data-level="2.5" data-path="metodologia.html"><a href="metodologia.html#preparaci%C3%B3n-de-los-datos"><i class="fa fa-check"></i><b>2.5</b> Preparación de los datos</a></li>
+<li class="chapter" data-level="2.6" data-path="metodologia.html"><a href="metodologia.html#an%C3%A1lisis-de-datos"><i class="fa fa-check"></i><b>2.6</b> Análisis de datos</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="metodologia.html"><a href="metodologia.html#an%C3%A1lisis-exploratorio"><i class="fa fa-check"></i><b>2.6.1</b> Análisis exploratorio</a></li>
+<li class="chapter" data-level="2.6.2" data-path="metodologia.html"><a href="metodologia.html#fiabilidad-del-instrumento"><i class="fa fa-check"></i><b>2.6.2</b> Fiabilidad del instrumento</a></li>
+<li class="chapter" data-level="2.6.3" data-path="metodologia.html"><a href="metodologia.html#perfiles-de-sensibilidad-intercultural"><i class="fa fa-check"></i><b>2.6.3</b> Perfiles de sensibilidad intercultural</a></li>
+<li class="chapter" data-level="2.6.4" data-path="metodologia.html"><a href="metodologia.html#efecto-de-la-intervenci%C3%B3n"><i class="fa fa-check"></i><b>2.6.4</b> Efecto de la intervención</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="operacionalizacion.html"><a href="operacionalizacion.html"><i class="fa fa-check"></i><b>3</b> Operacionalización de las variables</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="operacionalizacion.html"><a href="operacionalizacion.html#variables-sociodemogr%C3%A1ficas"><i class="fa fa-check"></i><b>3.1</b> Variables sociodemográficas</a></li>
+<li class="chapter" data-level="3.2" data-path="operacionalizacion.html"><a href="operacionalizacion.html#sensibilidad-intercultural-cuant"><i class="fa fa-check"></i><b>3.2</b> Sensibilidad Intercultural (CUANT)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>4</b> Análisis exploratorio de la sensibilidad intercultural</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-exploratorio-de-las-variables-sociodemogr%C3%A1ficas"><i class="fa fa-check"></i><b>4.1</b> Análisis exploratorio de las variables sociodemográficas</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="eda.html"><a href="eda.html#mapa"><i class="fa fa-check"></i><b>4.1.1</b> Mapa</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="eda.html"><a href="eda.html#analisis-de-las-variables-del-perfil-acad%C3%A9mico"><i class="fa fa-check"></i><b>4.2</b> Analisis de las variables del perfil académico</a></li>
+<li class="chapter" data-level="4.3" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-de-las-variables-de-consumo-cultural-externo-y-proyecci%C3%B3n-intercultural"><i class="fa fa-check"></i><b>4.3</b> Análisis de las variables de consumo cultural externo y proyección intercultural</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="validacion.html"><a href="validacion.html"><i class="fa fa-check"></i><b>5</b> Validación del instrumento</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="validacion.html"><a href="validacion.html#preparaci%C3%B3n-y-limpieza-de-la-identidad-escalar"><i class="fa fa-check"></i><b>5.1</b> Preparación y limpieza de la identidad escalar</a></li>
+<li class="chapter" data-level="5.2" data-path="validacion.html"><a href="validacion.html#validaci%C3%B3n-psicom%C3%A9trica-de-la-muestra"><i class="fa fa-check"></i><b>5.2</b> Validación psicométrica de la muestra</a></li>
+<li class="chapter" data-level="5.3" data-path="validacion.html"><a href="validacion.html#perfiles-de-sensibilidad-intercultural-con-el-pretest"><i class="fa fa-check"></i><b>5.3</b> Perfiles de sensibilidad intercultural con el pretest</a></li>
+<li class="chapter" data-level="5.4" data-path="validacion.html"><a href="validacion.html#estudiantes-con-sensibilidad-intercultural-pretest"><i class="fa fa-check"></i><b>5.4</b> Estudiantes con sensibilidad intercultural pretest</a></li>
+<li class="chapter" data-level="5.5" data-path="validacion.html"><a href="validacion.html#perfiles-de-sensibilidad-intercultural-con-el-postest"><i class="fa fa-check"></i><b>5.5</b> Perfiles de sensibilidad intercultural con el postest</a></li>
+<li class="chapter" data-level="5.6" data-path="validacion.html"><a href="validacion.html#comparaci%C3%B3n-de-los-mapas-de-clusters"><i class="fa fa-check"></i><b>5.6</b> Comparación de los mapas de clusters</a></li>
+<li class="chapter" data-level="5.7" data-path="validacion.html"><a href="validacion.html#conclusiones"><i class="fa fa-check"></i><b>5.7</b> Conclusiones</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="cuanti.html"><a href="cuanti.html"><i class="fa fa-check"></i><b>6</b> Análisis cuantitativo de sensibilidad intercultural</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="cuanti.html"><a href="cuanti.html#exploratorio-pp"><i class="fa fa-check"></i><b>6.1</b> Análisis exploratorio Pretest-Postest</a></li>
+<li class="chapter" data-level="6.2" data-path="cuanti.html"><a href="cuanti.html#equivalencia-inicial"><i class="fa fa-check"></i><b>6.2</b> Equivalencia inicial de los grupos y pérdida de participantes</a></li>
+<li class="chapter" data-level="6.3" data-path="cuanti.html"><a href="cuanti.html#efecto-intervencion"><i class="fa fa-check"></i><b>6.3</b> Efecto de la intervención: interacción Grupo × Tiempo</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="cuanti.html"><a href="cuanti.html#supuestos-del-ancova-y-estimaciones-robustas"><i class="fa fa-check"></i><b>6.3.1</b> Supuestos del ANCOVA y estimaciones robustas</a></li>
+<li class="chapter" data-level="6.3.2" data-path="cuanti.html"><a href="cuanti.html#modelo-lineal-mixto-coeficientes-y-supuestos"><i class="fa fa-check"></i><b>6.3.2</b> Modelo lineal mixto: coeficientes y supuestos</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="cuanti.html"><a href="cuanti.html#cambio-intragrupo"><i class="fa fa-check"></i><b>6.4</b> Cambio dentro de cada grupo</a></li>
+<li class="chapter" data-level="6.5" data-path="cuanti.html"><a href="cuanti.html#transicion-perfiles"><i class="fa fa-check"></i><b>6.5</b> Transición entre perfiles de sensibilidad intercultural</a></li>
+<li class="chapter" data-level="6.6" data-path="cuanti.html"><a href="cuanti.html#potencia"><i class="fa fa-check"></i><b>6.6</b> Potencia estadística</a></li>
+<li class="chapter" data-level="6.7" data-path="cuanti.html"><a href="cuanti.html#conclusiones-cuanti"><i class="fa fa-check"></i><b>6.7</b> Conclusiones</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con Bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analisis de datos de sensibilidad intercultural</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="metodologia" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Capítulo 2</span> Metodología<a href="metodologia.html#metodologia" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Este capítulo describe el enfoque y el diseño del estudio, los participantes, el instrumento, el procedimiento de recolección y preparación de los datos, y las técnicas estadísticas empleadas en cada uno de los análisis que se presentan en los capítulos siguientes.</p>
+<div id="enfoque-y-diseño" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Enfoque y diseño<a href="metodologia.html#enfoque-y-dise%C3%B1o" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>El estudio forma parte de una investigación con enfoque mixto que integra datos cuantitativos y cualitativos para comprender la influencia de la telecolaboración en el desarrollo de la sensibilidad intercultural y la competencia simbólica de futuros profesores de inglés (Capítulo <a href="index.html#contexto">1</a>). Este documento aborda el <strong>componente cuantitativo</strong>, centrado en la sensibilidad intercultural.</p>
+<p>Se empleó un diseño con medición antes y después de la intervención (Pretest y Postest) y grupo de comparación: el grupo Experimental participó en la experiencia telecolaborativa y el grupo Control no. Esta estructura permite distinguir el cambio atribuible a la intervención del cambio general debido al paso del tiempo, mediante la interacción Grupo × Tiempo.</p>
+</div>
+<div id="participantes" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Participantes<a href="metodologia.html#participantes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Participaron 48 futuros profesores de inglés, 28 en el grupo Experimental y 20 en el grupo Control, todos con un nivel de avance académico intermedio. La mayoría eran mujeres (33; 68.8%) y tenían entre 18 y 21 años (45; 93.8%), y pertenecían principalmente a los estratos socioeconómicos 1 y 2 (43; 89.6%). Los municipios de procedencia más frecuentes fueron Sincelejo (33) y Corozal (3). La caracterización completa de la muestra se presenta en el Capítulo <a href="eda.html#eda">4</a>.</p>
+<p>Respondieron el Postest 43 estudiantes (28 del grupo Experimental y 15 del grupo Control). Los 5 estudiantes que no lo respondieron pertenecían al grupo Control; en la sección <a href="cuanti.html#equivalencia-inicial">6.2</a> se examina si esta pérdida sesgó la comparación.</p>
+</div>
+<div id="instrumento" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Instrumento<a href="metodologia.html#instrumento" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La sensibilidad intercultural se midió con la Escala de Sensibilidad Intercultural (<em>Intercultural Sensitivity Scale</em>, ISS) de <span class="citation">Chen y Starosta (<a href="#ref-chenstarosta2000">2000</a>)</span>, en la versión en español adaptada por <span class="citation">Ruiz-Bernardo (<a href="#ref-ruizbernardo2012">2012</a>)</span>. La escala consta de 24 ítems con formato de respuesta tipo Likert de cinco puntos (de 1 a 5), agrupados en cinco dimensiones:</p>
+<ul>
+<li><strong>Atención</strong> (ítems 9, 12, 13, 14, 17, 19 y 21): flexibilidad cognitiva y atención ante la diferencia.</li>
+<li><strong>Respeto</strong> (ítems 2, 4, 8, 10, 18, 20 y 22): actitudes positivas hacia los valores y prácticas de otras culturas.</li>
+<li><strong>Implicación</strong> (ítems 1, 16 y 24): interés por interactuar con personas de otras culturas.</li>
+<li><strong>Confianza</strong> (ítems 3, 6, 7 y 11): seguridad al comunicarse interculturalmente.</li>
+<li><strong>Disfrute</strong> (ítems 5, 15 y 23): actitudes positivas hacia las experiencias interculturales.</li>
+</ul>
+<p>Ocho ítems están redactados en sentido inverso, de modo que una puntuación alta indica una menor sensibilidad intercultural: 2, 4, 10, 13, 15, 18, 20 y 22. El instrumento incluyó además un cuestionario sociodemográfico (nivel de avance académico, edad, sexo, estrato socioeconómico y lugar de procedencia) y preguntas sobre el perfil lingüístico y el consumo cultural de los estudiantes. La operacionalización completa de las variables y el enunciado de los 24 ítems se presentan en el Capítulo <a href="operacionalizacion.html#operacionalizacion">3</a>.</p>
+</div>
+<div id="procedimiento" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Procedimiento<a href="metodologia.html#procedimiento" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La escala se aplicó a ambos grupos en dos momentos: antes de la experiencia telecolaborativa (Pretest) y después de ella (Postest). Las respuestas de cada estudiante en las dos aplicaciones se emparejaron, de modo que fue posible analizar el cambio individual entre ambos momentos.</p>
+</div>
+<div id="preparación-de-los-datos" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Preparación de los datos<a href="metodologia.html#preparaci%C3%B3n-de-los-datos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Los datos se prepararon en cuatro pasos:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Recodificación de los ítems inversos.</strong> Los ocho ítems redactados en sentido inverso se recodificaron como <span class="math inline">\(6 - x\)</span>, para que en todos los ítems una puntuación más alta indicara una mayor sensibilidad intercultural.</li>
+<li><strong>Puntuaciones por dimensión.</strong> La puntuación de cada dimensión se calculó como la media de sus ítems, en la misma escala de 1 a 5.</li>
+<li><strong>Puntuación global.</strong> Tras el análisis de fiabilidad (Capítulo <a href="validacion.html#validacion">5</a>), la dimensión Disfrute se excluyó por la ausencia de covarianza sistemática entre sus ítems. La puntuación global de sensibilidad intercultural (ISS global) se calculó, por tanto, como la media de los 21 ítems de las cuatro dimensiones retenidas.</li>
+<li><strong>Escalamiento para el análisis de clúster.</strong> Para la identificación de perfiles, las cuatro dimensiones se escalaron por rango (entre 0 y 1), de modo que todas contribuyeran por igual al cálculo de las distancias.</li>
+</ol>
+</div>
+<div id="análisis-de-datos" class="section level2 hasAnchor" number="2.6">
+<h2><span class="header-section-number">2.6</span> Análisis de datos<a href="metodologia.html#an%C3%A1lisis-de-datos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>El análisis se organizó en cuatro etapas, que corresponden a los capítulos siguientes del documento. En todas las pruebas se adoptó un nivel de significancia de <span class="math inline">\(\alpha=.05\)</span> bilateral. Los análisis se realizaron con R version 4.6.1 (2026-06-24 ucrt) y los paquetes <code>psych</code> (fiabilidad), <code>cluster</code> y <code>factoextra</code> (análisis de clúster), <code>vegan</code> (PERMANOVA y PERMDISP) y <code>nlme</code> (modelos mixtos).</p>
+<div id="análisis-exploratorio" class="section level3 hasAnchor" number="2.6.1">
+<h3><span class="header-section-number">2.6.1</span> Análisis exploratorio<a href="metodologia.html#an%C3%A1lisis-exploratorio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Las variables sociodemográficas, del perfil académico y lingüístico y de consumo cultural se describieron mediante frecuencias absolutas y porcentajes, y la procedencia de los estudiantes se representó en un mapa (Capítulo <a href="eda.html#eda">4</a>).</p>
+</div>
+<div id="fiabilidad-del-instrumento" class="section level3 hasAnchor" number="2.6.2">
+<h3><span class="header-section-number">2.6.2</span> Fiabilidad del instrumento<a href="metodologia.html#fiabilidad-del-instrumento" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>La consistencia interna de la escala se evaluó con los datos del Pretest, tanto para la escala global como para cada dimensión, mediante tres indicadores: el coeficiente alfa de Cronbach, el coeficiente lambda-6 de Guttman (G6) y la correlación inter-ítem promedio (<span class="math inline">\(\bar{r}\)</span>). Dado que el alfa de Cronbach depende del número de ítems <span class="citation">(<a href="#ref-cortina1993">Cortina 1993</a>)</span>, en las dimensiones con pocos ítems se consideró como criterio complementario que la correlación inter-ítem promedio se ubicara entre .15 y .50 <span class="citation">(<a href="#ref-clarkwatson1995">Clark y Watson 1995</a>)</span>. Las dimensiones que no cumplieron ninguno de estos criterios se excluyeron de los análisis posteriores.</p>
+</div>
+<div id="perfiles-de-sensibilidad-intercultural" class="section level3 hasAnchor" number="2.6.3">
+<h3><span class="header-section-number">2.6.3</span> Perfiles de sensibilidad intercultural<a href="metodologia.html#perfiles-de-sensibilidad-intercultural" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Para identificar perfiles de estudiantes con niveles similares de sensibilidad intercultural se aplicó, de forma independiente en el Pretest y en el Postest, un análisis de clúster jerárquico aglomerativo con el método de Ward <span class="citation">(<a href="#ref-ward1963">Ward 1963</a>)</span> sobre la distancia euclídea entre las cuatro dimensiones escaladas por rango. Se eligió este procedimiento, en lugar de K-medias, por su mejor desempeño en muestras pequeñas y su menor sensibilidad a los valores extremos.</p>
+<p>El número de perfiles se determinó con el criterio del ancho de silueta promedio <span class="citation">(<a href="#ref-rousseeuw1987">Rousseeuw 1987</a>)</span>, evaluando soluciones de uno a diez clústeres, e interpretando su magnitud según <span class="citation">Kaufman y Rousseeuw (<a href="#ref-kaufmanrousseeuw1990">1990</a>)</span>; como criterio complementario se empleó el método del codo, basado en la suma de cuadrados intra-clúster. La solución elegida se representó mediante el dendrograma y un mapa de clústeres sobre los dos primeros componentes principales, y los perfiles se caracterizaron con la media, la desviación estándar y la mediana de cada dimensión. La normalidad de las dimensiones, en la muestra total y dentro de cada perfil, se evaluó con la prueba de Shapiro-Wilk <span class="citation">(<a href="#ref-shapirowilk1965">Shapiro y Wilk 1965</a>)</span>.</p>
+<p>Dado que varias dimensiones no cumplieron el supuesto de normalidad, la diferencia entre los perfiles se contrastó mediante un análisis multivariante de varianza por permutaciones [PERMANOVA; <span class="citation">Anderson (<a href="#ref-anderson2001">2001</a>)</span>], con distancia euclídea y 999 permutaciones. Como el PERMANOVA es sensible a la heterogeneidad de las dispersiones cuando los grupos tienen tamaños desiguales <span class="citation">(<a href="#ref-andersonwalsh2013">Anderson y Walsh 2013</a>)</span>, se verificó la homogeneidad de las dispersiones multivariantes con la prueba PERMDISP <span class="citation">(<a href="#ref-anderson2006">Anderson 2006</a>)</span>, también con 999 permutaciones.</p>
+</div>
+<div id="efecto-de-la-intervención" class="section level3 hasAnchor" number="2.6.4">
+<h3><span class="header-section-number">2.6.4</span> Efecto de la intervención<a href="metodologia.html#efecto-de-la-intervenci%C3%B3n" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>El efecto de la telecolaboración se evaluó en cinco pasos (Capítulo <a href="cuanti.html#cuanti">6</a>):</p>
+<ol style="list-style-type: decimal">
+<li><strong>Equivalencia inicial y pérdida de participantes.</strong> Se compararon los grupos en el Pretest, y dentro del grupo Control a quienes respondieron o no el Postest, con la prueba U de Mann-Whitney <span class="citation">(<a href="#ref-mannwhitney1947">Mann y Whitney 1947</a>)</span>, acompañada del tamaño del efecto <span class="math inline">\(r = |Z|/\sqrt{N}\)</span>.</li>
+<li><strong>Interacción Grupo × Tiempo.</strong> Se aplicaron tres aproximaciones complementarias:
+<ul>
+<li>un <strong>análisis de covarianza (ANCOVA)</strong> sobre el Postest con el Pretest como covariable, con el eta cuadrado parcial (<span class="math inline">\(\eta^2_p\)</span>) como tamaño del efecto. Se verificaron la homogeneidad de las pendientes de regresión, la normalidad de los residuos (Shapiro-Wilk) y la homogeneidad de varianzas (prueba de Levene basada en la mediana), y el efecto de Grupo se estimó también con errores estándar robustos HC3 <span class="citation">(<a href="#ref-longervin2000">Long y Ervin 2000</a>)</span> y mediante una prueba de permutación con 9 999 permutaciones;</li>
+<li>un <strong>modelo lineal mixto</strong> <span class="citation">(<a href="#ref-lairdware1982">Laird y Ware 1982</a>; <a href="#ref-pinheirobates2000">Pinheiro y Bates 2000</a>)</span> con efectos fijos de Tiempo, Grupo y su interacción y un intercepto aleatorio por estudiante, que permite incluir a los 48 participantes. Se verificaron la normalidad de los residuos y de los interceptos aleatorios, la homogeneidad de las varianzas entre las combinaciones de Grupo y Tiempo (prueba de Levene y prueba de razón de verosimilitudes frente a un modelo con varianzas distintas) y el supuesto de que los datos faltan al azar (regresión logística del abandono sobre el Pretest y comparación con los casos completos). La interacción se evaluó además con un intervalo de confianza bootstrap del 95% (2 000 remuestreos de estudiantes estratificados por grupo) y una prueba de permutación (2 000 permutaciones);</li>
+<li>la <strong>comparación de las ganancias</strong> (Postest − Pretest) entre grupos con la prueba U de Mann-Whitney.</li>
+</ul></li>
+<li><strong>Cambio dentro de cada grupo.</strong> Se compararon el Pretest y el Postest de cada grupo con la prueba de rangos con signo de Wilcoxon <span class="citation">(<a href="#ref-wilcoxon1945">Wilcoxon 1945</a>)</span> en las dimensiones sin distribución normal y con la prueba t de Student para muestras pareadas en Confianza, con el tamaño del efecto <span class="math inline">\(r\)</span> o <span class="math inline">\(d_z\)</span>, respectivamente. Los valores <span class="math inline">\(p\)</span> se ajustaron por comparaciones múltiples con el método de <span class="citation">Holm (<a href="#ref-holm1979">1979</a>)</span>.</li>
+<li><strong>Transición entre perfiles.</strong> Se cruzó el perfil de cada estudiante en el Pretest con su perfil en el Postest, y se evaluó la simetría de los cambios en cada grupo con la prueba exacta de McNemar <span class="citation">(<a href="#ref-mcnemar1947">McNemar 1947</a>)</span>.</li>
+<li><strong>Potencia estadística.</strong> Se calculó, con la distribución <span class="math inline">\(t\)</span> no central, la diferencia mínima detectable con una potencia del 80% para los tamaños de grupo disponibles, así como la potencia alcanzada y el tamaño muestral necesario para el efecto observado en cada dimensión <span class="citation">(<a href="#ref-cohen1988">Cohen 1988</a>)</span>.</li>
+</ol>
+<p>Las semillas aleatorias de los procedimientos de permutación y bootstrap se fijaron para garantizar la reproducibilidad de los resultados.</p>
+
+</div>
+</div>
+</div>
+<h3>Referencias<a href="referencias.html#referencias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-anderson2001" class="csl-entry">
+Anderson, Marti J. 2001. <span>«A New Method for Non-Parametric Multivariate Analysis of Variance»</span>. <em>Austral Ecology</em> 26 (1): 32-46. <a href="https://doi.org/10.1111/j.1442-9993.2001.01070.pp.x">https://doi.org/10.1111/j.1442-9993.2001.01070.pp.x</a>.
+</div>
+<div id="ref-anderson2006" class="csl-entry">
+Anderson, Marti J. 2006. <span>«Distance-Based Tests for Homogeneity of Multivariate Dispersions»</span>. <em>Biometrics</em> 62 (1): 245-53. <a href="https://doi.org/10.1111/j.1541-0420.2005.00440.x">https://doi.org/10.1111/j.1541-0420.2005.00440.x</a>.
+</div>
+<div id="ref-andersonwalsh2013" class="csl-entry">
+Anderson, Marti J., y Daniel C. I. Walsh. 2013. <span>«<span>PERMANOVA</span>, <span>ANOSIM</span>, and the <span>Mantel</span> Test in the Face of Heterogeneous Dispersions: What Null Hypothesis Are You Testing?»</span> <em>Ecological Monographs</em> 83 (4): 557-74. <a href="https://doi.org/10.1890/12-2010.1">https://doi.org/10.1890/12-2010.1</a>.
+</div>
+<div id="ref-chenstarosta2000" class="csl-entry">
+Chen, Guo-Ming, y William J. Starosta. 2000. <span>«The Development and Validation of the Intercultural Sensitivity Scale»</span>. <em>Human Communication</em> 3: 1-15.
+</div>
+<div id="ref-clarkwatson1995" class="csl-entry">
+Clark, Lee Anna, y David Watson. 1995. <span>«Constructing Validity: Basic Issues in Objective Scale Development»</span>. <em>Psychological Assessment</em> 7 (3): 309-19. <a href="https://doi.org/10.1037/1040-3590.7.3.309">https://doi.org/10.1037/1040-3590.7.3.309</a>.
+</div>
+<div id="ref-cohen1988" class="csl-entry">
+Cohen, Jacob. 1988. <em>Statistical Power Analysis for the Behavioral Sciences</em>. 2.ª ed. Lawrence Erlbaum Associates. <a href="https://doi.org/10.4324/9780203771587">https://doi.org/10.4324/9780203771587</a>.
+</div>
+<div id="ref-cortina1993" class="csl-entry">
+Cortina, Jose M. 1993. <span>«What Is Coefficient Alpha? An Examination of Theory and Applications»</span>. <em>Journal of Applied Psychology</em> 78 (1): 98-104. <a href="https://doi.org/10.1037/0021-9010.78.1.98">https://doi.org/10.1037/0021-9010.78.1.98</a>.
+</div>
+<div id="ref-holm1979" class="csl-entry">
+Holm, Sture. 1979. <span>«A Simple Sequentially Rejective Multiple Test Procedure»</span>. <em>Scandinavian Journal of Statistics</em> 6 (2): 65-70.
+</div>
+<div id="ref-kaufmanrousseeuw1990" class="csl-entry">
+Kaufman, Leonard, y Peter J. Rousseeuw. 1990. <em>Finding Groups in Data: An Introduction to Cluster Analysis</em>. John Wiley &amp; Sons. <a href="https://doi.org/10.1002/9780470316801">https://doi.org/10.1002/9780470316801</a>.
+</div>
+<div id="ref-lairdware1982" class="csl-entry">
+Laird, Nan M., y James H. Ware. 1982. <span>«Random-Effects Models for Longitudinal Data»</span>. <em>Biometrics</em> 38 (4): 963-74. <a href="https://doi.org/10.2307/2529876">https://doi.org/10.2307/2529876</a>.
+</div>
+<div id="ref-longervin2000" class="csl-entry">
+Long, J. Scott, y Laurie H. Ervin. 2000. <span>«Using Heteroscedasticity Consistent Standard Errors in the Linear Regression Model»</span>. <em>The American Statistician</em> 54 (3): 217-24. <a href="https://doi.org/10.1080/00031305.2000.10474549">https://doi.org/10.1080/00031305.2000.10474549</a>.
+</div>
+<div id="ref-mannwhitney1947" class="csl-entry">
+Mann, H. B., y D. R. Whitney. 1947. <span>«On a Test of Whether One of Two Random Variables Is Stochastically Larger than the Other»</span>. <em>The Annals of Mathematical Statistics</em> 18 (1): 50-60. <a href="https://doi.org/10.1214/aoms/1177730491">https://doi.org/10.1214/aoms/1177730491</a>.
+</div>
+<div id="ref-mcnemar1947" class="csl-entry">
+McNemar, Quinn. 1947. <span>«Note on the Sampling Error of the Difference Between Correlated Proportions or Percentages»</span>. <em>Psychometrika</em> 12 (2): 153-57. <a href="https://doi.org/10.1007/BF02295996">https://doi.org/10.1007/BF02295996</a>.
+</div>
+<div id="ref-pinheirobates2000" class="csl-entry">
+Pinheiro, José C., y Douglas M. Bates. 2000. <em>Mixed-Effects Models in S and S-PLUS</em>. Springer. <a href="https://doi.org/10.1007/b98882">https://doi.org/10.1007/b98882</a>.
+</div>
+<div id="ref-rousseeuw1987" class="csl-entry">
+Rousseeuw, Peter J. 1987. <span>«Silhouettes: A Graphical Aid to the Interpretation and Validation of Cluster Analysis»</span>. <em>Journal of Computational and Applied Mathematics</em> 20: 53-65. <a href="https://doi.org/10.1016/0377-0427(87)90125-7">https://doi.org/10.1016/0377-0427(87)90125-7</a>.
+</div>
+<div id="ref-ruizbernardo2012" class="csl-entry">
+Ruiz-Bernardo, M. Paola. 2012. <span>«Revisión lógica y empírica para la adaptación de un cuestionario de sensibilidad intercultural»</span>. <em>Fòrum de Recerca</em>, n.º 17: 381-402. <a href="https://doi.org/10.6035/forumrecerca.2012.17.24">https://doi.org/10.6035/forumrecerca.2012.17.24</a>.
+</div>
+<div id="ref-shapirowilk1965" class="csl-entry">
+Shapiro, S. S., y M. B. Wilk. 1965. <span>«An Analysis of Variance Test for Normality (Complete Samples)»</span>. <em>Biometrika</em> 52 (3-4): 591-611. <a href="https://doi.org/10.1093/biomet/52.3-4.591">https://doi.org/10.1093/biomet/52.3-4.591</a>.
+</div>
+<div id="ref-ward1963" class="csl-entry">
+Ward, Joe H. 1963. <span>«Hierarchical Grouping to Optimize an Objective Function»</span>. <em>Journal of the American Statistical Association</em> 58 (301): 236-44. <a href="https://doi.org/10.1080/01621459.1963.10500845">https://doi.org/10.1080/01621459.1963.10500845</a>.
+</div>
+<div id="ref-wilcoxon1945" class="csl-entry">
+Wilcoxon, Frank. 1945. <span>«Individual Comparisons by Ranking Methods»</span>. <em>Biometrics Bulletin</em> 1 (6): 80-83. <a href="https://doi.org/10.2307/3001968">https://doi.org/10.2307/3001968</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="operacionalizacion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": false,
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -174,7 +174,7 @@ descriptivos_dim(pre) %>%
                align = "lrrrrrr")
 ```
 
-El análisis descriptivo evidenció medias elevadas en Atención (M=4.38, DE=.40) e Implicación (M=4.48, DE=.43), un nivel moderado en Respeto (M=3.69, DE=.35) y la mayor variabilidad en Confianza (M=3.20, DE=.70). La prueba de Shapiro-Wilk indicó desviaciones significativas de la normalidad en Atención (p=.042) e Implicación (p\<.001), coherente con un efecto techo observable en sus valores mínimos (3.14 y 3.33, respectivamente, con máximos en 5.00). Dado que la restricción de rango atenúa las estimaciones de fiabilidad al reducir la varianza disponible (@francomartinez2023), este hallazgo complementa la explicación previa del bajo alfa de Cronbach en Implicación, sumándose al efecto ya documentado del reducido número de ítems.
+El análisis descriptivo evidenció medias elevadas en Atención (M=4.38, DE=.40) e Implicación (M=4.48, DE=.43), un nivel moderado en Respeto (M=3.69, DE=.35) y la mayor variabilidad en Confianza (M=3.20, DE=.70). La prueba de Shapiro-Wilk indicó desviaciones significativas de la normalidad en Atención (p=.042) e Implicación (p\<.001), coherente con un efecto techo observable en sus valores mínimos (3.14 y 3.33, respectivamente, con máximos en 5.00). Dado que la restricción de rango atenúa las estimaciones de fiabilidad al reducir la varianza disponible [@francomartinez2023], este hallazgo complementa la explicación previa del bajo alfa de Cronbach en Implicación, sumándose al efecto ya documentado del reducido número de ítems.
 
 Ahor, con $n = 48$, no podemos usar métodos que requieran grandes volúmenes de datos. El mejor procedimiento para muestras pequeñas no es el K-means tradicional (que es sensible a valores extremos), sino el Análisis de Clúster Jerárquico con el Método de Ward. Vizualicemos el dendograma
 
@@ -241,7 +241,7 @@ normalidad_perfil(pre, perfiles_pre) %>%
                align = "ccccc")
 ```
 
-La verificación de normalidad por dimensión y perfil reveló que, si bien el Perfil 1 (Baja Sensibilidad) cumplió el supuesto de normalidad en las cuatro dimensiones evaluadas, el Perfil 2 (Alta Sensibilidad) presentó desviaciones significativas en Atención (p=.046) e Implicación (p=.001). Este hallazgo es consistente con el efecto techo documentado previamente en la muestra completa para estas dos dimensiones: al concentrar las puntuaciones más altas de la muestra (Atención $\bar{x}=4.58$; Implicación $\bar{x}=4.61$), el Perfil 2 exhibe una distribución comprimida contra el límite superior de la escala, lo que introduce asimetría negativa (@francomartinez2023).
+La verificación de normalidad por dimensión y perfil reveló que, si bien el Perfil 1 (Baja Sensibilidad) cumplió el supuesto de normalidad en las cuatro dimensiones evaluadas, el Perfil 2 (Alta Sensibilidad) presentó desviaciones significativas en Atención (p=.046) e Implicación (p=.001). Este hallazgo es consistente con el efecto techo documentado previamente en la muestra completa para estas dos dimensiones: al concentrar las puntuaciones más altas de la muestra (Atención $\bar{x}=4.58$; Implicación $\bar{x}=4.61$), el Perfil 2 exhibe una distribución comprimida contra el límite superior de la escala, lo que introduce asimetría negativa [@francomartinez2023].
 
 Como los perfiles en la dimensión voluntad no tiene comportamiento normal, por lo que procederemos a realizar un analisis de varianza permutacional (PERMANOVA), esto es, con el fin de verificar si los cluster son diferentes estadísticamente
 
@@ -255,9 +255,9 @@ adonis2(datos_permanova ~ Perfil, data = data_final %>% filter(Experimento == "P
         permutations = 999, method = "euclidean")
 ```
 
-Para confirmar la validez estadística de la consistencia de los dos perfiles, se realizó un análisis de PERMANOVA (@anderson2001) sobre las cuatro dimensiones estandarizadas por rango, utilizando distancia euclídea y 999 permutaciones. Los resultados evidenciaron diferencias significativas entre los centroides de los perfiles ($F_{1,46}=22.22$, $R^2=.326$, $p<.001$), indicando que la pertenencia al perfil explica el 32.6% de la variabilidad conjunta en las dimensiones de sensibilidad intercultural. Este resultado corrobora, con respaldo inferencial, la separación observada visualmente en el mapa de clusters y en el dendrograma jerárquico.
+Para confirmar la validez estadística de la consistencia de los dos perfiles, se realizó un análisis de PERMANOVA [@anderson2001] sobre las cuatro dimensiones estandarizadas por rango, utilizando distancia euclídea y 999 permutaciones. Los resultados evidenciaron diferencias significativas entre los centroides de los perfiles ($F_{1,46}=22.22$, $R^2=.326$, $p<.001$), indicando que la pertenencia al perfil explica el 32.6% de la variabilidad conjunta en las dimensiones de sensibilidad intercultural. Este resultado corrobora, con respaldo inferencial, la separación observada visualmente en el mapa de clusters y en el dendrograma jerárquico.
 
-Dado que el PERMANOVA es sensible a la heterogeneidad de las dispersiones entre grupos, en especial cuando sus tamaños están desbalanceados (@andersonwalsh2013), se verificó este supuesto mediante la prueba de homogeneidad de dispersiones multivariantes PERMDISP (@anderson2006), sobre las mismas dimensiones estandarizadas, con distancia euclídea y 999 permutaciones.
+Dado que el PERMANOVA es sensible a la heterogeneidad de las dispersiones entre grupos, en especial cuando sus tamaños están desbalanceados [@andersonwalsh2013], se verificó este supuesto mediante la prueba de homogeneidad de dispersiones multivariantes PERMDISP [@anderson2006], sobre las mismas dimensiones estandarizadas, con distancia euclídea y 999 permutaciones.
 
 ```{r permdisp-pretest}
 dispersion_pre <- betadisper(dist(datos_permanova, method = "euclidean"), data_final$Perfil, type = "centroid")
@@ -270,7 +270,7 @@ print("--- RESULTADO DE PERMDISP (Pretest, k=2) ---")
 permutest(dispersion_pre, permutations = 999)
 ```
 
-A diferencia del Postest, en el Pretest las dispersiones de los perfiles no fueron homogéneas ($F_{1,46}=4.74$, $p=.040$): el Perfil 1 (Baja Sensibilidad, n=17) presentó una dispersión mayor alrededor de su centroide (0.411) que el Perfil 2 (Alta Sensibilidad, n=31; 0.331). Puesto que el grupo de menor tamaño es también el más disperso —la combinación en la que el PERMANOVA tiende a ser más liberal (@andersonwalsh2013)—, el resultado anterior debe interpretarse con cautela: parte de la diferencia detectada refleja la mayor heterogeneidad del perfil de Baja Sensibilidad y no exclusivamente la distancia entre centroides. No obstante, la magnitud del efecto ($R^2=.326$) y la brecha de 1.01 puntos en Confianza entre perfiles indican que la diferencia de localización es real y sustantiva.
+A diferencia del Postest, en el Pretest las dispersiones de los perfiles no fueron homogéneas ($F_{1,46}=4.74$, $p=.040$): el Perfil 1 (Baja Sensibilidad, n=17) presentó una dispersión mayor alrededor de su centroide (0.411) que el Perfil 2 (Alta Sensibilidad, n=31; 0.331). Puesto que el grupo de menor tamaño es también el más disperso —la combinación en la que el PERMANOVA tiende a ser más liberal [@andersonwalsh2013]—, el resultado anterior debe interpretarse con cautela: parte de la diferencia detectada refleja la mayor heterogeneidad del perfil de Baja Sensibilidad y no exclusivamente la distancia entre centroides. No obstante, la magnitud del efecto ($R^2=.326$) y la brecha de 1.01 puntos en Confianza entre perfiles indican que la diferencia de localización es real y sustantiva.
 
 ## Estudiantes con sensibilidad intercultural pretest
 
@@ -357,7 +357,7 @@ normalidad_perfil(post, perfiles_post) %>%
                align = "ccccc")
 ```
 
-La verificación de normalidad por dimensión y perfil en el Postest mostró que el perfil de Baja Sensibilidad (n=13) cumplió el supuesto de normalidad en las cuatro dimensiones, mientras que el perfil de Alta Sensibilidad (n=30) presentó desviaciones significativas en Respeto (p=.0001) e Implicación (p\<.0001). Este patrón replica el observado en el Pretest, donde el perfil de mayor sensibilidad también violaba la normalidad en las dimensiones con medias más cercanas al techo de la escala, consistente con el efecto de compresión documentado previamente (@francomartinez2023). La violación de normalidad en Respeto es, adicionalmente, atribuible al caso atípico ya identificado (estudiante 37, con puntuación mínima de 2.00 en esta dimensión), cuyo valor extremo dentro de una distribución por lo demás comprimida hacia el máximo de la escala favorece el rechazo de la prueba de Shapiro-Wilk.
+La verificación de normalidad por dimensión y perfil en el Postest mostró que el perfil de Baja Sensibilidad (n=13) cumplió el supuesto de normalidad en las cuatro dimensiones, mientras que el perfil de Alta Sensibilidad (n=30) presentó desviaciones significativas en Respeto (p=.0001) e Implicación (p\<.0001). Este patrón replica el observado en el Pretest, donde el perfil de mayor sensibilidad también violaba la normalidad en las dimensiones con medias más cercanas al techo de la escala, consistente con el efecto de compresión documentado previamente [@francomartinez2023]. La violación de normalidad en Respeto es, adicionalmente, atribuible al caso atípico ya identificado (estudiante 37, con puntuación mínima de 2.00 en esta dimensión), cuyo valor extremo dentro de una distribución por lo demás comprimida hacia el máximo de la escala favorece el rechazo de la prueba de Shapiro-Wilk.
 
 ```{r permanova-postest}
 df_final <- post %>% mutate(Experimento = "Postest", Perfil = factor(perfiles_post))
@@ -371,7 +371,7 @@ adonis2(datos_permanova_postest ~ Perfil, data = df_final %>% filter(Experimento
 
 El análisis de PERMANOVA en el Postest evidenció diferencias significativas entre los centroides de los perfiles ($F_{1,41}=29.22$, $R^2=.416$, $p<.001$), con un tamaño de efecto superior al observado en el Pretest ($R^2=.326$). Este incremento en la varianza explicada por la pertenencia al perfil, junto con el mayor ancho de silueta obtenido en esta fase (.391 frente a .297) y la ausencia de solapamiento visual entre clusters en el mapa 2D, sugiere que la intervención pedagógica no solo modificó la distribución de estudiantes entre perfiles, sino que acentuó la separación estructural entre ellos.
 
-Para descartar que esta diferencia obedeciera a una heterogeneidad de las dispersiones —dado el desbalance de tamaños entre perfiles (n=30 vs n=13)—, se aplicó nuevamente la prueba PERMDISP (@anderson2006) sobre las mismas dimensiones estandarizadas, con distancia euclídea y 999 permutaciones.
+Para descartar que esta diferencia obedeciera a una heterogeneidad de las dispersiones —dado el desbalance de tamaños entre perfiles (n=30 vs n=13)—, se aplicó nuevamente la prueba PERMDISP [@anderson2006] sobre las mismas dimensiones estandarizadas, con distancia euclídea y 999 permutaciones.
 
 ```{r permdisp-postest}
 dispersion_post <- betadisper(dist(datos_permanova_postest, method = "euclidean"), df_final$Perfil, type = "centroid")
