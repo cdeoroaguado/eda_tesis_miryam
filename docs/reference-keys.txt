@@ -19,6 +19,7 @@ fig:grafica-perfiles
 tab:equivalencia
 tab:perdida-participantes
 tab:interaccion
+tab:potencia
 tab:supuestos-ancova
 tab:coeficientes-mixto
 tab:supuestos-mixto

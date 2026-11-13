@@ -164,7 +164,45 @@ bind_rows(lapply(variables_iss, function(v) {
 
 Ninguna de las tres aproximaciones detectó un efecto diferencial significativo de la intervención: el grupo Experimental no cambió significativamente más que el grupo Control en ninguna dimensión ni en la puntuación global. Respeto fue la única dimensión en la que las tres pruebas coincidieron en señalar una ventaja del grupo Experimental (diferencia ajustada = 0.219, $\eta^2_p=.048$; interacción en el modelo mixto = 0.258), de magnitud pequeña a moderada, aunque sin alcanzar significancia estadística (ANCOVA $p=.163$; modelo mixto $p=.125$; ganancias $p=.385$). Por tanto, la divergencia observada en Respeto en el gráfico de perfiles debe interpretarse como una tendencia y no como un efecto demostrado.
 
-El modelo mixto mostró, además, un efecto principal del Tiempo en Confianza ($b=0.427$, $p=.015$), indicando que ambos grupos incrementaron su seguridad en la interacción intercultural en una magnitud similar. Debe considerarse que, con grupos de 15 y 28 estudiantes, el estudio solo dispone de potencia suficiente (80%) para detectar diferencias grandes entre grupos ($d\approx0.9$), de modo que efectos de la magnitud observada en Respeto requerirían muestras considerablemente mayores para ser confirmados.
+El modelo mixto mostró, además, que el grupo Control aumentó significativamente en Confianza entre ambas aplicaciones ($b=0.427$, $p=.015$; Tabla \@ref(tab:coeficientes-mixto)) y, dado que la interacción Tiempo × Grupo fue prácticamente nula ($b=-0.034$, $p=.873$), el grupo Experimental mostró un aumento de magnitud similar. Ambos grupos incrementaron, por tanto, su seguridad en la interacción intercultural, sin que este cambio pueda atribuirse a la intervención.
+
+Para valorar la ausencia de efectos significativos debe considerarse la potencia estadística del estudio (@cohen1988). Se calculó, para la comparación entre grupos de tamaño desigual (15 y 28 estudiantes; $\alpha=.05$ bilateral), la diferencia mínima detectable con una potencia del 80% y, para cada dimensión, el tamaño del efecto observado ($d$ de Cohen: diferencia ajustada del ANCOVA dividida por la desviación estándar combinada del Postest), la potencia con la que el estudio podía detectarlo y el número de estudiantes por grupo que se requeriría para alcanzar una potencia del 80%.
+
+```{r potencia}
+n_control <- sum(grupo_43 == "Control")
+n_experimental <- sum(grupo_43 == "Experimental")
+
+# Potencia de la prueba t para dos grupos de tamaño desigual (distribución t no central)
+potencia_t <- function(d, alfa = .05) {
+  gl <- n_control + n_experimental - 2
+  ncp <- d * sqrt(n_control * n_experimental / (n_control + n_experimental))
+  t_critico <- qt(1 - alfa / 2, gl)
+  1 - pt(t_critico, gl, ncp) + pt(-t_critico, gl, ncp)
+}
+d_minimo <- uniroot(function(d) potencia_t(d) - .80, c(.01, 3))$root
+
+tabla_potencia <- bind_rows(lapply(variables_iss, function(v) {
+  modelo <- lm(post[[v]] ~ pre_pareado[[v]] + grupo_43)
+  diferencia <- coef(modelo)[3]
+  de_combinada <- sqrt(((n_control - 1) * var(post[[v]][grupo_43 == "Control"]) +
+                          (n_experimental - 1) * var(post[[v]][grupo_43 == "Experimental"])) /
+                         (n_control + n_experimental - 2))
+  d_obs <- abs(diferencia) / de_combinada
+  tibble(Dimension = v, `Dif. ajustada` = f3(diferencia), `DE combinada` = f3(de_combinada),
+         d = sprintf("%.2f", d_obs), `Potencia alcanzada` = sprintf("%.2f", potencia_t(d_obs)),
+         `n por grupo para 80%` = ceiling(power.t.test(delta = d_obs, power = .80)$n))
+}))
+d_respeto <- tabla_potencia$d[tabla_potencia$Dimension == "D2_Respeto"]
+n_respeto <- tabla_potencia$`n por grupo para 80%`[tabla_potencia$Dimension == "D2_Respeto"]
+pot_respeto <- tabla_potencia$`Potencia alcanzada`[tabla_potencia$Dimension == "D2_Respeto"]
+
+tabla_potencia %>%
+  knitr::kable(caption = sprintf("Análisis de potencia de la comparación entre grupos (n=%d y n=%d; diferencia mínima detectable con potencia del 80%%: d=%.2f)",
+                                 n_control, n_experimental, d_minimo),
+               align = "lrrrrr")
+```
+
+Con los tamaños de grupo disponibles, el estudio solo tenía una potencia del 80% para detectar diferencias grandes entre grupos ($d\geq`r sprintf("%.2f", d_minimo)`$). En Respeto, la diferencia observada corresponde a un efecto pequeño a moderado ($d=`r d_respeto`$), que el estudio podía detectar con una probabilidad de apenas `r pot_respeto`; para confirmarlo con una potencia del 80% se requerirían aproximadamente `r n_respeto` estudiantes por grupo. En las demás dimensiones los efectos observados fueron muy pequeños ($d<0.30$), compatibles con la ausencia de un efecto diferencial. Estos cálculos corresponden a la comparación de medias del Postest y son, por tanto, conservadores: el ANCOVA, al controlar el Pretest, dispone de una potencia algo mayor. Aun así, la ausencia de significancia en Respeto puede deberse al tamaño reducido de la muestra, por lo que esta tendencia constituye una hipótesis a confirmar en estudios con muestras mayores.
 
 Finalmente, se verificaron los supuestos del ANCOVA: (a) la homogeneidad de las pendientes de regresión, mediante el término de interacción Pretest × Grupo; (b) la normalidad de los residuos, con la prueba de Shapiro-Wilk; y (c) la homogeneidad de varianzas entre grupos, con la prueba de Levene (basada en la mediana). Además, dado que algunas dimensiones no cumplen el supuesto de normalidad, el efecto de Grupo se estimó también con errores estándar robustos HC3 (@longervin2000) y mediante una prueba de permutación con 9 999 permutaciones de las etiquetas de grupo, que conserva el par Pretest-Postest de cada estudiante y no requiere normalidad.
 
