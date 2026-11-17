@@ -114,9 +114,9 @@ tibble(
   knitr::kable(caption = "Estadísticos completos de fiabilidad del instrumento global", align = "lr")
 ```
 
-El coeficiente Alfa de Cronbach ($\alpha$) obtenido fue de .707. Este valor se sitúa por encima del umbral de .70 sugerido por la literatura psicométrica clásica (Nunnally & Bernstein, 1994), por lo que el instrumento tiene una fiabilidad aceptable para la investigación y sus 24 preguntas convergen de manera consistente en la medición del constructo de sensibilidad intercultural.
+El coeficiente Alfa de Cronbach ($\alpha$) obtenido fue de .708. Este valor se sitúa por encima del umbral de .70 sugerido por la literatura psicométrica clásica (Nunnally & Bernstein, 1994), por lo que el instrumento tiene una fiabilidad aceptable para la investigación y sus 24 preguntas convergen de manera consistente en la medición del constructo de sensibilidad intercultural.
 
-Además, se observó un coeficiente G6 de Guttman (Lambda-6) de .887. Dado que este indicador es especialmente sensible a estructuras multidimensionales, su elevado valor sugiere una excelente consistencia interna en las dimensiones específicas del instrumento, con subdimensiones bien definidas y estables.
+Además, se observó un coeficiente G6 de Guttman (Lambda-6) de .888. Dado que este indicador es especialmente sensible a estructuras multidimensionales, su elevado valor sugiere una excelente consistencia interna en las dimensiones específicas del instrumento, con subdimensiones bien definidas y estables.
 
 La correlación inter-ítem promedio ($r$ promedio) fue de .114. Es un valor moderado, pero su magnitud es coherente con instrumentos que evalúan constructos complejos y amplios. La escala no es unidimensional: sus ítems capturan distintas dimensiones de la sensibilidad intercultural sin ser redundantes entre sí, tal como se esperaba teóricamente.
 
@@ -158,9 +158,9 @@ Las dimensiones de Atención (D1: $\alpha= .610$) y Confianza (D4: $\alpha =  .7
 
 Respecto a la dimensión de Implicación (D3: $\alpha=  .403$), aunque su coeficiente se ubica por debajo de los umbrales convencionales, este resultado debe interpretarse a la luz del reducido número de ítems que la componen ($n = 3$). @cortina1993 y @clarkwatson1995 advierten que el Alfa de Cronbach está matemáticamente condicionado por el número de reactivos, de modo que subescalas breves pueden subestimar la fiabilidad real incluso cuando sus ítems covarían de forma adecuada. Por ello se recurrió a la correlación inter-ítem promedio como criterio complementario @streiner2015: el valor obtenido ($r = .219$) se sitúa dentro del rango óptimo de .15 a .50 propuesto por @clarkwatson1995, lo que respalda la coherencia interna de la dimensión y justifica su retención en los análisis subsiguientes.
 
-La dimensión de Disfrute (D5: = .068), en cambio, no encuentra el mismo respaldo: pese a estar compuesta también por 3 ítems, su correlación inter-ítem promedio ($r = .038$) se ubica muy por debajo del umbral mínimo de $.15$, e incluso el mejor subconjunto posible de dos ítems no logra superarlo ($r = .100$ tras excluir P5). Como ambas dimensiones tienen el mismo número de reactivos, la longitud de la escala no explica el bajo desempeño de D5, que se debe a la ausencia de covarianza sistemática entre sus ítems. En consecuencia, esta dimensión se excluye de los análisis dimensionales posteriores y se reporta como limitación del instrumento en la muestra estudiada.
+La dimensión de Disfrute (D5: $\alpha= .068$), en cambio, no encuentra el mismo respaldo: pese a estar compuesta también por 3 ítems, su correlación inter-ítem promedio ($r = .038$) se ubica muy por debajo del umbral mínimo de $.15$, e incluso el mejor subconjunto posible de dos ítems no logra superarlo ($r = .100$ tras excluir P5). Como ambas dimensiones tienen el mismo número de reactivos, la longitud de la escala no explica el bajo desempeño de D5, que se debe a la ausencia de covarianza sistemática entre sus ítems. En consecuencia, esta dimensión se excluye de los análisis dimensionales posteriores y se reporta como limitación del instrumento en la muestra estudiada.
 
-Finalmente, el elevado valor de G6 de Guttman global ($.887$), calculado sobre los 24 ítems, respalda que el instrumento en su conjunto posee una alta consistencia interna y constituye una herramienta válida para evaluar el impacto de la intervención, sin que ello subsane, por sí solo, la debilidad específica detectada en Disfrute.
+Finalmente, el elevado valor de G6 de Guttman global ($.888$), calculado sobre los 24 ítems, respalda que el instrumento en su conjunto posee una alta consistencia interna y constituye una herramienta válida para evaluar el impacto de la intervención, sin que ello subsane, por sí solo, la debilidad específica detectada en Disfrute.
 
 ## Perfiles de sensibilidad intercultural con el pretest
 
@@ -390,7 +390,7 @@ Las distancias promedio al centroide fueron similares en ambos perfiles (Alta Se
 
 La comparación de la distribución de perfiles entre fases mostró un incremento en la proporción de estudiantes clasificados en el perfil de Alta Sensibilidad Intercultural, del 64.6% en el Pretest (n=31/48) al 69.8% en el Postest (n=30/43), con una reducción correspondiente en el perfil de Baja Sensibilidad (35.4% a 30.2%). Este patrón agregado es consistente con un efecto positivo de la intervención pedagógica sobre la distribución general de perfiles, aunque no permite, por sí solo, establecer si los mismos estudiantes migraron de perfil entre fases, análisis que requeriría el emparejamiento individual de casos mediante un identificador común entre el Pretest y el Postest.
 
-Dado que la asignación numérica de los clusters (1, 2) es arbitraria en cada ejecución del algoritmo de agrupamiento jerárquico, el perfil de Alta Sensibilidad correspondió al Cluster 1 en el Pretest y al Cluster 1 en el Postest únicamente por coincidencia en la codificación de color de las figuras, por lo que las etiquetas de perfil se reportan siempre por su denominación sustantiva (Alta/Baja Sensibilidad) y no por el número de clúster.
+Dado que la asignación numérica de los clusters (1, 2) es arbitraria en cada ejecución del algoritmo de agrupamiento jerárquico, el perfil de Alta Sensibilidad correspondió al Cluster 2 en el Pretest y al Cluster 1 en el Postest. Por eso las etiquetas de perfil se reportan siempre por su denominación sustantiva (Alta/Baja Sensibilidad) y no por el número de clúster.
 
 ## Conclusiones
 
