@@ -1,6 +1,6 @@
 # Análisis exploratorio de la sensibilidad intercultural {#eda}
 
-Aquí realizaremos el análisis exploratorio de los datos del pretest y postest con los grupos de control y experimental.
+Este capítulo presenta el análisis exploratorio de los datos del pretest y del postest de los grupos de control y experimental.
 
 ## Análisis exploratorio de las variables sociodemográficas
 
@@ -31,18 +31,18 @@ sociodemo %>%
 
 ### Mapa
 
-Este es el mapa del número de estudiantes por municipio.
+El mapa muestra el número de estudiantes por municipio.
 
 ```{r mapa, out.width="1152px"}
 # Figura original: la cartografía municipal usada (DANE) no está disponible en el proyecto.
 knitr::include_graphics("img/mapa-1.png")
 ```
 
-Podemos ver que el número de estudiantes se concentra en el municipio de Sincelejo, seguido de Corozal.
+Los estudiantes se concentran en el municipio de Sincelejo, seguido de Corozal.
 
 ## Analisis de las variables del perfil académico
 
-Realicemos el análisis exploratorio del perfil académico y la competencia lingüistica donde los estudiantes tienen nivel de avance académico intermedio
+A continuación se presenta el análisis exploratorio del perfil académico y de la competencia lingüística de los estudiantes, cuyo nivel de avance académico es intermedio.
 
 ```{r perfilacaycl}
 var_lengua <- "Aparte de ingles y frances, estas estudiando o has estudiado otra lengua?"
@@ -63,7 +63,7 @@ idiomas %>%
 
 ## Análisis de las variables de consumo cultural externo y proyección intercultural
 
-Ahora, hagamos el análisis exploratorio del concumo cultural externo y la proyección intercultural
+Se presenta ahora el análisis exploratorio del consumo cultural externo y de la proyección intercultural.
 
 ```{r grafcultural}
 frecuencia <- c("Todos los dias", "Casi todos los dias", "Ocasionalmente", "Casi nunca", "Nunca")

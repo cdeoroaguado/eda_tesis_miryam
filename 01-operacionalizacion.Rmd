@@ -2,7 +2,7 @@
 
 ## Variables sociodemográficas
 
-Las variables sociodemográficas permiten caracterizar a los futuros profesores de inglés y explorar posibles asociaciones entre sus características personales/contextuales y los niveles de sensibilidad intercultural y competencia simbólica.
+Las variables sociodemográficas permiten caracterizar a los futuros profesores de inglés y explorar posibles asociaciones entre sus características personales y contextuales y los niveles de sensibilidad intercultural y competencia simbólica.
 
 ```{r oper2, echo=FALSE}
 tab <- read.csv("tablas/oper2.csv", check.names = FALSE, colClasses = "character", encoding = "UTF-8")
@@ -12,7 +12,7 @@ knitr::kable(tab, caption = "Variables Sociodemográficas", align = "lll", forma
 
 ## Sensibilidad Intercultural (CUANT)
 
-La tabla completa de operacionalización de los 24 ítems de la Escala de Sensibilidad Intercultural (ISS)
+La siguiente tabla presenta la operacionalización completa de los 24 ítems de la Escala de Sensibilidad Intercultural (ISS).
 
 ```{r oper3, echo=FALSE}
 tab <- read.csv("tablas/oper3.csv", check.names = FALSE, colClasses = "character", encoding = "UTF-8")
